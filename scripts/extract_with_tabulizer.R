@@ -34,11 +34,13 @@ for (i in 45:71){
 
 # collect removed lines to ensure no data were lost
 verification <- data.frame(matrix(ncol = 26, nrow = 0))
+
 for (i in 45:71){
   page <- as.data.frame(extract_tables(my_pdf, page = i, method = 'stream'), stringsAsFactors = FALSE)
   page <- page[c(1,2,3), ]
   verification <- rbind(verification, page)
 }
+
 # visually inspect the removed lines - seems okay
 View(verification)
 
@@ -59,7 +61,8 @@ appendix_III <- appendix_III %>%
     reference_nc = "Wild Juvenile Salmonid Monitoring Program Broughton Archipelago 2016"
     )
 
-# visualise the dataframe
+# visualize the dataframe
+# returns 969 rows which corresponds to the PDF
 View(appendix_III)
 
 # save to a csv file (in interim data as the final processed data will include all years)
