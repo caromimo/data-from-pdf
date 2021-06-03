@@ -56,7 +56,7 @@ collate-quatsino-per-year:
 # or extract and collate all in one step:
 
 .PHONY: all
-all: extract-broughton-archipelago-2016-2020 extract-discovery-islands-2017-2020 extract-quatsino-2016-2020 collate-broughton-archipelago-per-year collate-discovery-islands-per year collate-quatsino-per-year
+all: extract-broughton-archipelago-2016-2020 extract-discovery-islands-2017-2020 extract-quatsino-2016-2020 collate-broughton-archipelago-per-year collate-discovery-islands-per-year collate-quatsino-per-year
 
 .PHONY: clean
 clean:
