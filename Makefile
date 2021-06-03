@@ -1,6 +1,6 @@
 # EXTRACT AND COLLATE DATA FROM PDFs
 
-# Step 1: extract the data from pdfs with camelot
+# Extract the data from pdfs with camelot
 
 .PHONY: extract-broughton-archipelago-2016-2020
 extract-broughton-archipelago-2016-2020:
@@ -25,7 +25,7 @@ extract-quatsino-2016-2020:
 		camelot -p 38-49 -f csv --output ./data/interim/quatsino/quatsino_2019.csv lattice ./data/raw/quatsino/quatsino-wild-juvenile-salmonid-monitoring-2019.pdf
 		camelot -p 35-44 -f csv --output ./data/interim/quatsino/quatsino_2020.csv lattice ./data/raw/quatsino/Quatsino-Wild-Juvenile-Salmonid-Monitoring-2020.pdf
 
-# Step 2: append the csv files with csvkit
+# Append the csv files with csvkit
 
 # if needed, install csvkit: 
 # pip install csvkit
@@ -53,13 +53,21 @@ collate-quatsino-per-year:
 		csvstack data/interim/quatsino/quatsino_2019* > data/interim/quatsino/all_quatsino_2019.csv
 		csvstack data/interim/quatsino/quatsino_2020* > data/interim/quatsino/all_quatsino_2020.csv
 
-# or extract and collate all in one step:
+# Extract and collate all in one step:
 
 .PHONY: all
-all: extract-broughton-archipelago-2016-2020 extract-discovery-islands-2017-2020 extract-quatsino-2016-2020 collate-broughton-archipelago-per-year collate-discovery-islands-per-year collate-quatsino-per-year
+all: extract collate
+
+.PHONY: extract
+extract: extract-broughton-archipelago-2016-2020 extract-discovery-islands-2017-2020 extract-quatsino-2016-2020
+
+.PHONY: collate
+collate: collate-broughton-archipelago-per-year collate-discovery-islands-per-year collate-quatsino-per-year
+
+# Clean directories when needed
 
 .PHONY: clean
 clean:
-		rm data/interim/broughton_archipelago/*
-		rm data/interim/discovery_islands/*
-		rm data/interim/quatsino/*
+		rm -f data/interim/broughton_archipelago/*
+		rm -f data/interim/discovery_islands/*
+		rm -f data/interim/quatsino/*
