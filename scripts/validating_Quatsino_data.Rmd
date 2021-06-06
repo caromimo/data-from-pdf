@@ -1,0 +1,139 @@
+---
+title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC PDF documents"
+author: "C. Mimeault"
+date: "06/06/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+remove(list=ls())
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+library(formattable)
+```
+
+All Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC documents (PDFs) can be found [here](https://mowi.com/caw/sustainability/wild-salmonid-lice-monitoring/). As of May 2021, reports were available for 2015 to 2020. The 2015 report did not include fish-level sea lice data in the appendix. Data for 2016-2020 from Appendix IIIs were extracted using Camelot and csvkit using [this code](https://github.com/caromimo/data-from-pdf/blob/main/Makefile) saved on Github.
+
+To validate the data extraction, some tables included in the report were reproduced. Note that not all sampled fish were collected. Only data related to Appendix III could be reproduced. The relevant tables from the reports are included first and then reproduced using extracted data. In case of discrepencies, those were explored. 
+
+# 2016
+
+The 2016 Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC report can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/quatsino-wild-juvenile-salmonid-monitoring-2016.pdf). The report includes, among other things, sea lice counts on chum salmon (CM), coho salmon (CO), Chinook salmon (CH) and pink salmon (PK) collected by beach seine in 2016 in Quatsino Sound and Holberg Inlet. 
+
+```{r categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_sites <- tibble(site = as_factor(c("Site 1", "Site 2", "Site 3", "Site 4", "Site 5", "Site 6", "Site 7", "Site 8", "Site 9", "Site 10")))
+
+all_species <- tibble(fish_species = as_factor(c("CM", "CO", "CH", "PK")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_c3", "lep_c4", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+```
+
+```{r 2016 data, include=FALSE}
+# read the data with little cleaning
+data <- read_csv(here("data/interim/quatsino/all_quatsino_2016.csv")) %>% 
+  clean_names() %>%
+  mutate(site = as_factor(site),
+         fish_species = as_factor(fish_species)
+         )
+```
+
+## Table 3
+
+Table 3 as included in the 2016 Quatsino report: 
+
+![Table 3 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_3.png")`)
+
+Table 3 reproduced using extracted data:
+
+```{r table 3, echo=FALSE}
+data %>%
+  count(fish_species) %>% 
+  left_join(x = all_species, y = .) %>% 
+  mutate(n = replace_na(n, 0))
+```
+
+The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Table 3 is validated. Additionally, based on the extracted data, there were `r data %>% count()` fish collected which also corresponds to collection totals in Table 3. Moving on to the next relevant table.
+
+## Table 4
+
+Table 4 as included in the 2016 Quatsino report: 
+
+![Table 4 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_4.png")`)
+
+Table 4 reproduced using extracted data:
+```{r table 4, echo=FALSE}
+data %>% 
+  count(site) %>% 
+  left_join(x = all_sites, y = .) %>% 
+  mutate(n = replace_na(n, 0))
+```
+
+The total number of individuals collected per site in Table 4 of the PDF and using the extracted data are NOT the same. They differ for the number of fish collected at Site 1 and Site 9. 
+
+To understand the discrepancy, I referred to the data included in Appendix III of the PDF (using the PDF rather that the extracted data):
+
+For Site 1: 
+
+* April 5, 2016: 31 fish collected (see page 53);
+* May 4, 2016: 17 fish collected (see page 39); and
+* May 4, 2016: 5 fish collected (see page 40). 
+
+So a total of `r 31+17+5` fish collected at Site 1 as in Table 4 reproduced using extracted data.
+
+For Site 9: 
+
+* April 5, 2016: 31 fish collected (see page 38);
+* May 4, 2016: 26 fish collected (see page 40); and
+* May 4, 2016: 4 fish collected (see page 41). 
+
+So a total of `r 31+26+4` fish collected at Site 9 as in Table 4 reproduced using extracted data.
+
+The results in Table 4 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Table 4 is therefore validated. Moving on to the next relevant table.
+
+## Table 8
+
+Table 8 reproduced using extracted data. To do so, first I reformated the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+
+```{r reformat, include=FALSE}
+chum_data <- data %>% 
+  filter(fish_species == "CM") %>%
+  select(-site, -fish_species, -length_mm, -weight_g) %>%
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -sample_date)
+```
+
+```{r april, include=FALSE}
+chum_april <- chum_data %>%
+  filter(sample_date == "5-Apr-16") %>%
+  group_by(sea_lice_species_and_life_stages) %>%
+  summarize(
+    lice_counted_april = sum(number_of_lice_observed)
+  ) %>% 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r may, include=FALSE}
+chum_may <- chum_data %>%
+  filter(sample_date == "4-May-16") %>%
+  group_by(sea_lice_species_and_life_stages) %>%
+  summarize(
+    lice_counted_may = sum(number_of_lice_observed)
+  ) %>% 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r join_tables, echo=FALSE}
+inner_join(chum_april, chum_may)
+```
+
+Table 8 as included in the 2016 Quatsino report: 
+
+![Table 8 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_8.png")`)
+
+The number of sea lice per species and life stage in Table 8 of the PDF and using the extracted data are the same. Table 8 is validated. Moving on to the next relevant table.
