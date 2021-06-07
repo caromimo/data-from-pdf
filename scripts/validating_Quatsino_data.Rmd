@@ -1,5 +1,5 @@
 ---
-title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC PDF documents"
+title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program Quatsino Sound in British Columbia reports only available as PDF documents"
 author: "C. Mimeault"
 date: "06/06/2021"
 output: pdf_document
@@ -17,9 +17,11 @@ library(janitor)
 library(formattable)
 ```
 
-All Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC documents (PDFs) can be found [here](https://mowi.com/caw/sustainability/wild-salmonid-lice-monitoring/). As of May 2021, reports were available for 2015 to 2020. The 2015 report did not include fish-level sea lice data in the appendix. Data for 2016-2020 from Appendix IIIs were extracted using Camelot and csvkit using [this code](https://github.com/caromimo/data-from-pdf/blob/main/Makefile) saved on Github.
+All Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC documents (PDFs) can normally be found [here](https://mowi.com/caw/sustainability/wild-salmonid-lice-monitoring/) but note that this site is experiencing technical difficulties as I am putting this document together. As of May 2021, reports were available for 2015 to 2020. The 2015 report did not include fish-level sea lice data in the appendix. Data from Appendix III from the 2016 to 2020 reports were extracted using Camelot and csvkit using [this code](https://github.com/caromimo/data-from-pdf/blob/main/Makefile) saved on Github.
 
-To validate the data extraction, some tables included in the report were reproduced. Note that not all sampled fish were collected. Only data related to Appendix III could be reproduced. The relevant tables from the reports are included first and then reproduced using extracted data. In case of discrepencies, those were explored. 
+To validate the data extraction, some tables included in the report were reproduced. Note that not all sampled fish were collected. Only tables using data related to Appendix III could be reproduced. Both the relevant tables from the reports and the results using extracted data are included in this report. In case of discrepancies, those were explored. 
+
+The Rmarkdown file to generate the present document is available [here](https://github.com/caromimo/data-from-pdf/blob/main/scripts/validating_Quatsino_data.Rmd) on Github.
 
 # 2016
 
@@ -59,7 +61,7 @@ data %>%
   mutate(n = replace_na(n, 0))
 ```
 
-The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Table 3 is validated. Additionally, based on the extracted data, there were `r data %>% count()` fish collected which also corresponds to collection totals in Table 3. Moving on to the next relevant table.
+The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data %>% count()` fish collected which also corresponds to collection totals in Table 3. Successfully reproducing Table 3 validates the extracted data used to generate this table. Moving on to the next relevant table.
 
 ## Table 4
 
@@ -95,20 +97,20 @@ For Site 9:
 
 So a total of `r 31+26+4` fish collected at Site 9 as in Table 4 reproduced using extracted data.
 
-The results in Table 4 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Table 4 is therefore validated. Moving on to the next relevant table.
+The results in Table 4 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table.
 
 ## Table 8
 
-Table 8 reproduced using extracted data. To do so, first I reformated the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+Table 8 was reproduced using extracted data. To do so, first I filtered for chum salmon data, then I re-formated the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
 
-```{r reformat, include=FALSE}
+```{r chum reformat, include=FALSE}
 chum_data <- data %>% 
   filter(fish_species == "CM") %>%
   select(-site, -fish_species, -length_mm, -weight_g) %>%
   gather(sea_lice_species_and_life_stages, number_of_lice_observed, -sample_date)
 ```
 
-```{r april, include=FALSE}
+```{r chum april, include=FALSE}
 chum_april <- chum_data %>%
   filter(sample_date == "5-Apr-16") %>%
   group_by(sea_lice_species_and_life_stages) %>%
@@ -118,7 +120,7 @@ chum_april <- chum_data %>%
   left_join(x = all_sea_lice_species_and_life_stages, y = .)
 ```
 
-```{r may, include=FALSE}
+```{r chum may, include=FALSE}
 chum_may <- chum_data %>%
   filter(sample_date == "4-May-16") %>%
   group_by(sea_lice_species_and_life_stages) %>%
@@ -128,7 +130,7 @@ chum_may <- chum_data %>%
   left_join(x = all_sea_lice_species_and_life_stages, y = .)
 ```
 
-```{r join_tables, echo=FALSE}
+```{r chum join_tables, echo=FALSE}
 inner_join(chum_april, chum_may)
 ```
 
@@ -136,4 +138,74 @@ Table 8 as included in the 2016 Quatsino report:
 
 ![Table 8 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_8.png")`)
 
-The number of sea lice per species and life stage in Table 8 of the PDF and using the extracted data are the same. Table 8 is validated. Moving on to the next relevant table.
+The number of sea lice per species and life stage in Table 8 of the PDF and using the extracted data are the same. Successfully reproducing Table 8 validates the extracted data used to generate this table. Moving on to the next relevant table.
+
+## Table 10
+
+Table 10 as included in the 2016 Quatsino report: 
+
+![Table 10 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_10.png")`)
+
+Table 10 was reproduced using extracted data. To do so, first I filtered for chum salmon data, then I re-formated the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+
+```{r chinook and pink reformat, include=FALSE}
+two_species <- c("CH", "PK")
+                 
+chinook_and_pink_data <- data %>% 
+  filter(fish_species %in% two_species) %>%
+  select(-site, -fish_species, -length_mm, -weight_g) %>%
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -sample_date)
+```
+
+```{r chinook and pink april, include=FALSE}
+chinook_and_pink_data_april <- chinook_and_pink_data %>%
+  filter(sample_date == "5-Apr-16") %>%
+  group_by(sea_lice_species_and_life_stages) %>%
+  summarize(
+    lice_counted_april = sum(number_of_lice_observed)
+  ) %>% 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r chinook and pink may, include=FALSE}
+chinook_and_pink_data_may <- chinook_and_pink_data %>%
+  filter(sample_date == "4-May-16") %>%
+  group_by(sea_lice_species_and_life_stages) %>%
+  summarize(
+    lice_counted_may = sum(number_of_lice_observed)
+  ) %>% 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r chinook and pink join_tables, echo=FALSE}
+inner_join(chinook_and_pink_data_april, chinook_and_pink_data_may)
+```
+
+The number of sea lice per species and life stage in Table 10 of the PDF and using the extracted data are the same. Successfully reproducing Table 10 validates the extracted data used to generate this table. 
+
+## 2016 conclusions
+
+The data extracted from PDF were used to reproduce the following tables in the report: 
+
+* Table 3: successfully reproduced indicating that related data validated
+* Table 6: successfully reproduced indicating that related data validated
+* Table 8: successfully reproduced indicating that related data validated
+* Table 10: successfully reproduced indicating that related data validated
+
+It is reasonable to conclude that the data extracted from the 2016 Quatsino report is representative of the data in the Appendix III of the report.
+
+# 2017
+
+TBC
+
+# 2018
+
+TBC
+
+# 2019
+
+TBC
+
+# 2020
+
+TBC
