@@ -71,3 +71,9 @@ clean:
 		rm -f data/interim/broughton_archipelago/*
 		rm -f data/interim/discovery_islands/*
 		rm -f data/interim/quatsino/*
+
+.PHONY: pdf-info
+pdf-info:
+	  for pdf in data/raw/broughton_archipelago/*.pdf; do pdfinfo "$pdf"; done
+	  for pdf in data/raw/discovery_islands/*.pdf; do pdfinfo "$pdf"; done
+	  for pdf in data/raw/quatsino/*.pdf; do pdfinfo "$pdf"; done
