@@ -81,12 +81,11 @@ Table 4 as included in the 2017 Discovery Islands report:
 "Collection Totals" column from Table 4 reproduced using extracted data:
 
 ```{r table 4, echo=FALSE, message=FALSE}
-table_4 <- data |>
+data |>
   count(fish_species) |> . => 
   left_join(x = all_species, y = .) |> 
-  mutate(n = replace_na(n, 0))
-
-kable(table_4)
+  mutate(n = replace_na(n, 0)) |>
+  kable()
 ```
 
 The total number of individuals collected per species in Table 4 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data |> count()` fish collected which also corresponds to collection totals in Table 4. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table.
@@ -101,12 +100,11 @@ Table 7 as included in the 2017 Discovery Islands report:
 
 "Sample Total" column from Table 7 reproduced using extracted data:
 ```{r table 7, echo=FALSE, message=FALSE}
-table_7 <- data |> 
+data |> 
   count(location) |> . => 
   left_join(x = all_locations, y = .) %>% 
-  mutate(n = replace_na(n, 0))
-
-kable(table_7)
+  mutate(n = replace_na(n, 0)) |>
+  kable()
 ```
 
 The total number of individuals collected per location in Table 7 of the PDF and using the extracted data are the same. Successfully reproducing Table 7 validates the extracted data used to generate this table. Moving on to the next relevant table. 
