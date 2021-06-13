@@ -78,7 +78,7 @@ Table 4 as included in the 2017 Discovery Islands report:
 
 ![Table 4 from the 2017 Discovery Islands PDF document](`r here("tables/Discovery_Islands_2017_Table_4.png")`)
 
-Table 4 reproduced using extracted data:
+"Collection Totals" column from Table 4 reproduced using extracted data:
 
 ```{r table 4, echo=FALSE, message=FALSE}
 table_4 <- data |>
@@ -99,7 +99,7 @@ Table 7 as included in the 2017 Discovery Islands report:
 ![Table 7 from the 2017 Discovery Islands PDF document representing the number of individual fish (chum, coho and pink only) collected in the Broughton Archipelago in April and May 2016](`r here("tables/Discovery_Islands_2017_Table_7.png")`)
 \newpage
 
-Table 7 reproduced using extracted data:
+"Sample Total" column from Table 7 reproduced using extracted data:
 ```{r table 7, echo=FALSE, message=FALSE}
 table_7 <- data |> 
   count(location) |> . => 
@@ -109,7 +109,7 @@ table_7 <- data |>
 kable(table_7)
 ```
 
-The total number of individuals collected per site in Table 4 of the PDF and using the extracted data are the same. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table. 
+The total number of individuals collected per location in Table 7 of the PDF and using the extracted data are the same. Successfully reproducing Table 7 validates the extracted data used to generate this table. Moving on to the next relevant table. 
 
 <!-- ## Table 8 -->
 
@@ -205,10 +205,6 @@ The total number of individuals collected per site in Table 4 of the PDF and usi
 <!-- * Table 10: successfully reproduced indicating that related data validated -->
 
 <!-- It is reasonable to conclude that the data extracted from the 2016 Quatsino report is representative of the data in the Appendix III of the report. -->
-
-# 2017
-
-TBC
 
 # 2018
 
