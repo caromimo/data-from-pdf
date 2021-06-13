@@ -1,0 +1,496 @@
+---
+title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program reports available as PDF documents"
+author: "C. Mimeault"
+date: "June 13, 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+# this code requires R version 4.1
+remove(list=ls())
+knitr::opts_chunk$set(echo = TRUE)
+# this line enables . => until enabled by default in R 4.2
+Sys.setenv("_R_USE_PIPEBIND_" = "true") 
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+library(formattable)
+library(stringdist)
+library(knitr)
+```
+
+Some companies operating finfish aquaculture sites on the West Coast of Canada contract third parties to conduct juvenile wild salmon sea lice monitoring in British Columbia (BC). All reports can be found [here](https://mowi.com/caw/sustainability/wild-salmonid-lice-monitoring/) in PDF format. 
+
+As of June 2021, reports were available for surveys conducted from 2014 to 2020 in five different regions of BC. Sea lice counts at the fish level are included in the Appendix III of the following reports:
+
+* Broughton Archipelago (2016-2020)
+* Discovery Islands (2017-2020)
+* Quatsino (2016-2020) 
+
+# Data extraction from PDFs
+
+When available, fish-level data were extracted from the PDF documents using Camelot and csvkit librairies using bash code available [here](https://github.com/caromimo/data-from-pdf/blob/main/Makefile). The Rmarkdown file to generate the present document is available [here](https://github.com/caromimo/data-from-pdf/blob/main/scripts/validating_data.Rmd).
+
+# Validation of extracted data
+
+Extracted data were validated by reproducing some tables included in the reports. Note that not all sampled fish were collected. Only tables using data related to Appendix III could be reproduced. The relevant tables from the reports are reproduced in this document and  compared to the results using extracted data. In case of discrepancies, reasons were explored. 
+\newpage
+
+## Broughton Archipelago reports
+
+To be added here
+\newpage
+
+## Discovery Islands reports
+
+### 2017
+
+The 2017 Wild Juvenile Salmonid Monitoring Program Broughton Archipelago, BC report can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/discovery-islands-juvenile-salmonid-monitoring-2017.pdf). The report includes, among other things, sea lice counts on chum salmon (CM), coho salmon (CO), Chinook salmon (CH), pink salmon (PK) and threespine stickleback (TSB) sampled from 29 beach seine sites in 2017 in Broughton Archipelago. 
+
+```{r DI categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_locations <- tibble(location = as_factor(c("Francisco Point", "Marina Island", "Rebecca Spit", "Viner Point", "SE Hill Island", "Penn Island", "Deepwater Bay", "Raza", "Raza North", "Okisollo", "Owen Bay", "Rock Bay", "Discovery", "Nodales", "Shoal Bay", "Fanny Bay", "Bickley Bay", "Cordero", "Knox Bay", "Bear Bay", "Chancellor Channel", "Race Passage", "Wellbore Channel", "Bessborough Bay", "Sunderland", "Blenkinsop Bay", "Primary 3", "Primary 1", "Beautiful Bay")))
+
+all_species <- tibble(fish_species = as_factor(c("chum salmon", "pink salmon", "coho salmon", "chinook salmon", "threespine stickleback")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_c3", "lep_c4", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+```
+
+```{r DI 2016 data, include=FALSE}
+# read the data with little cleaning
+# the data in the Appendix III include a location called SE Hill SPit which does not exist
+# location SE Hill SPit was assumed to be an error for SE Hill Island 
+# making the correction resulted in same numbers in Table 7
+data <- read_csv(here("data/interim/discovery_islands/all_discovery_islands_2017.csv")) |> 
+  clean_names() |>
+  mutate(
+    location = replace(location, stringdist(location, "Bessaborough") < 7, "Bessborough Bay"),
+    location = replace(location, stringdist(location, "Blenkinsop Bay") < 3, "Blenkinsop Bay"),
+    location = replace(location, location == "Chancellor", "Chancellor Channel"),
+    location = replace(location, stringdist(location, "Deep Water Bay") <= 2, "Deepwater Bay"),
+    location = replace(location, stringdist(location, "Francisco") < 3, "Francisco Point"), 
+    location = replace(location, stringdist(location, "Marina Is") < 4, "Marina Island"),
+    location = replace(location, stringdist(location, "Rebecca Spit") <= 7, "Rebecca Spit"),
+    location = replace(location, location == "RAZA", "Raza"),
+    location = replace(location, location == "RAZA NORTH", "Raza North"),
+    location = replace(location, location == "RAZA North", "Raza North"),
+    location = replace(location, stringdist(location, "SE Hill SPit") <= 6, "SE Hill Island"),
+    location = replace(location, location == "Wellbore", "Wellbore Channel"),
+    fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
+    fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
+    fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
+    fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
+    fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
+    fish_species = as_factor(fish_species)
+    )
+```
+
+#### Table 4
+\
+
+Table 4 as included in the 2017 Discovery Islands report: 
+
+![Table 4 from the 2017 Discovery Islands PDF document](`r here("tables/Discovery_Islands_2017_Table_4.png")`)
+
+"Collection Totals" column from Table 4 reproduced using extracted data:
+
+```{r DI table 4, echo=FALSE, message=FALSE}
+data |>
+  count(fish_species) |> . => 
+  left_join(x = all_species, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per species in Table 4 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data |> count()` fish collected which also corresponds to collection totals in Table 4. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table.
+\newpage
+
+#### Table 7
+\
+
+Table 7 as included in the 2017 Discovery Islands report: 
+
+![Table 7 from the 2017 Discovery Islands PDF document representing the number of individual fish (chum, coho and pink only) collected in the Broughton Archipelago in April and May 2016](`r here("tables/Discovery_Islands_2017_Table_7.png")`)
+
+\newpage
+
+"Sample Total" column from Table 7 reproduced using extracted data:
+```{r DI table 7, echo=FALSE, message=FALSE}
+data |> 
+  count(location) |> . => 
+  left_join(x = all_locations, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per location in Table 7 of the PDF and using the extracted data are the same. Successfully reproducing Table 7 validates the extracted data used to generate this table. Moving on to the next relevant table. 
+\newpage
+
+#### Table 17
+\
+
+Table 17 as included in the 2017 Discovery Islands report:
+
+![Table 17 from the 2017 Discovery Islands PDF document](`r here("tables/Discovery_Islands_2017_Table_17.png")`)
+
+Table 17 was reproduced using extracted data. To do so, first I filtered for chum salmon data and for the pre-exposure locations, then I re-formatted the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+\newpage
+
+Table 17 reproduced using extracted data:
+```{r DI chum pre reformat, include=FALSE}
+pre_exposure_locations <- c("Francisco Point", "Marina Island", "Rebecca Spit", "Viner Point", "SE Hill Island", "Penn Island", "Deepwater Bay")
+
+chum_data <- data |>
+  filter(fish_species == "chum salmon") |>
+  filter(location %in% pre_exposure_locations) |>
+  select(-location, -fish_species, -length_mm, -weight_g) |>
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -date_of_seine)
+```
+
+```{r DI chum pre april, include=FALSE}
+sampling_in_april <- c("9-Apr-17", "10-Apr-17", "11-Apr-17")
+  
+chum_april_pre <- chum_data |>
+  filter(date_of_seine %in% sampling_in_april) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r DI chum pre may, include=FALSE}
+sampling_in_may <- c("23-May-17", "25-May-17", "26-May-17")
+
+chum_may_pre <- chum_data |>
+  filter(date_of_seine %in% sampling_in_may) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r DI chum pre join_tables, echo=FALSE, message=FALSE}
+inner_join(chum_april_pre, chum_may_pre)|>
+  kable()
+```
+
+The sea lice counts on chum salmon collected at pre-exposure locations in May in Table 17 of the PDF and using the extracted data are NOT the same. There is a small discrepancy for the LEP Co and LEP C1 in May. To understand the discrepancy, I referred to the data included in Appendix III of the PDF (using the PDF rather that the extracted data):
+
+For counts of LEP Co in chum salmon (CM) at pre-exposure locations (listed below) in May:
+
+* Francisco Point (p. 87-88): 0
+* Marina Island (p.88): 0 
+* Rebecca Spit (p.91-92): 0
+* Viner Point - no samples
+* SE Hill Island (p.92-93): 0
+* Penn Island (p. 89-90): 0
+* Deepwater Bay (p. 86-87): 0
+
+Based on the results included in the Appendix III of the PDF, there were 0 LEP Co observed on chum salmon captured at pre-exposure locations in May.
+
+For counts of LEP C1 in chum salmon at pre-exposure locations in May: 
+
+* Francisco Point (p. 87-88): 1
+* Marina Island (p.88): 0 
+* Rebecca Spit (p.91-92): 0
+* Viner Point - no samples
+* SE Hill Island (p.92-93): 0
+* Penn Island (p. 89-90): 1
+* Deepwater Bay (p. 86-87): 0
+
+Based on the results included in the Appendix III of the PDF, there were 2 LEP C1 observed on chum salmon captured at pre-exposure locations in May.
+
+In other words, the results in Table 17 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Successfully reproducing Table 17 validates the extracted data used to generate this table. Moving on to the next relevant table.
+
+#### Table 23
+\
+
+Table 23 as included in the 2017 Discovery Islands report:
+
+![Table 23 from the 2017 Discovery Islands PDF document](`r here("tables/Discovery_Islands_2017_Table_23.png")`)
+
+Table 23 was reproduced using extracted data. To do so, first I filtered for chum salmon data and for the post-exposure locations, then I re-formatted the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+\newpage
+
+Table 23 reproduced using extracted data:
+```{r DI chum post reformat, include=FALSE}
+post_exposure_locations <- c("Raza", "Raza North", "Okisollo", "Owen Bay", "Rock Bay", "Discovery", "Nodales", "Shoal Bay", "Fanny Bay", "Bickley Bay", "Cordero", "Knox Bay", "Bear Bay", "Chancellor Channel", "Race Passage", "Wellbore Channel", "Bessborough Bay", "Sunderland", "Blenkinsop Bay", "Primary 3", "Primary 1", "Beautiful Bay")
+
+chum_data <- data |>
+  filter(fish_species == "chum salmon") |>
+  filter(location %in% post_exposure_locations) |>
+  select(-location, -fish_species, -length_mm, -weight_g) |>
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -date_of_seine)
+```
+
+```{r DI chum post april, include=FALSE}
+sampling_in_april <- c("9-Apr-17", "10-Apr-17", "11-Apr-17")
+  
+chum_april_post <- chum_data |>
+  filter(date_of_seine %in% sampling_in_april) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r DI chum post may, include=FALSE}
+sampling_in_may <- c("23-May-17", "25-May-17", "26-May-17")
+
+chum_may_post <- chum_data |>
+  filter(date_of_seine %in% sampling_in_may) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r DI chum post join_tables, echo=FALSE, message=FALSE}
+inner_join(chum_april_post, chum_may_post)|>
+  kable()
+```
+
+The sea lice counts on chum salmon collected at post-exposure locations in May in Table 23 of the PDF and using the extracted data are the same. Successfully reproducing Table 23 validates the extracted data used to generate this table.
+
+#### 2017 conclusions
+\
+
+The data extracted from PDF were used to reproduce the following tables in the report:
+
+* Table 4 was successfully reproduced indicating that the related data are validated
+* Table 7 was successfully reproduced indicating that the related data are validated
+* Table 17 was successfully reproduced indicating that the related data are validated
+* Table 23 was successfully reproduced indicating that the related data are validated
+
+It is reasonable to conclude that the data extracted from the 2017 Discovery Islands report are representative of the data in the Appendix III of the report. The few discrepencies were explained and were not related to an error in the extracted data.
+
+### 2018
+
+To be discussed - do we need this?
+
+### 2019
+
+To be discussed - do we need this?
+
+### 2020
+
+To be discussed - do we need this? (maybe given difference metadata?)
+
+### Conclusion for data extracted from the Discovery Islands reports
+
+TBC
+\newpage
+
+## Quatsino reports
+
+### 2016
+
+The 2016 Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC report can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/quatsino-wild-juvenile-salmonid-monitoring-2016.pdf). The report includes, among other things, sea lice counts on chum salmon (CM), coho salmon (CO), Chinook salmon (CH) and pink salmon (PK) collected by beach seine in 2016 in Quatsino Sound and Holberg Inlet. 
+
+```{r Q categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_sites <- tibble(site = as_factor(c("Site 1", "Site 2", "Site 3", "Site 4", "Site 5", "Site 6", "Site 7", "Site 8", "Site 9", "Site 10")))
+
+all_species <- tibble(fish_species = as_factor(c("chum salmon", "coho salmon", "chinook salmon", "pink salmon")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_c3", "lep_c4", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+```
+
+```{r Q 2016 data, include=FALSE}
+# read the data with little cleaning
+data <- read_csv(here("data/interim/quatsino/all_quatsino_2016.csv")) |> 
+  clean_names() |> 
+  mutate(site = as_factor(site),
+         fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
+         fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
+         fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
+         fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
+         fish_species = as_factor(fish_species)
+         )
+```
+
+#### Table 3
+\
+
+Table 3 as included in the 2016 Quatsino report: 
+
+![Table 3 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_3.png")`)
+
+Table 3 reproduced using extracted data:
+
+```{r Q table 3, echo=FALSE, message=FALSE}
+data |> 
+  count(fish_species) |> . => 
+  left_join(x = all_species, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data |> count()` fish collected which also corresponds to collection totals in Table 3. Successfully reproducing Table 3 validates the extracted data used to generate this table. Moving on to the next relevant table.
+\newpage
+
+#### Table 4
+\
+
+Table 4 as included in the 2016 Quatsino report: 
+
+![Table 4 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_4.png")`)
+
+Table 4 reproduced using extracted data:
+```{r Q table 4, echo=FALSE, message=FALSE}
+data |> 
+  count(site) |>  . =>
+  left_join(x = all_sites, y = .) |> 
+  mutate(n = replace_na(n, 0))|>
+  kable()
+```
+
+The total number of individuals collected per site in Table 4 of the PDF and using the extracted data are NOT the same. They differ for the number of fish collected at Site 1 and Site 9. 
+
+To understand the discrepancy, I referred to the data included in Appendix III of the PDF (using the PDF rather that the extracted data):
+
+For Site 1: 
+
+* April 5, 2016: 31 fish collected (see page 53);
+* May 4, 2016: 17 fish collected (see page 39); and
+* May 4, 2016: 5 fish collected (see page 40). 
+
+So a total of `r 31+17+5` fish collected at Site 1 as in Table 4 reproduced using extracted data.
+
+For Site 9: 
+
+* April 5, 2016: 31 fish collected (see page 38);
+* May 4, 2016: 26 fish collected (see page 40); and
+* May 4, 2016: 4 fish collected (see page 41). 
+
+So a total of `r 31+26+4` fish collected at Site 9 as in Table 4 reproduced using extracted data.
+
+The results in Table 4 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table.
+
+#### Table 8
+\
+
+Table 8 as included in the 2016 Quatsino report: 
+
+![Table 8 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_8.png")`)
+
+Table 8 was reproduced using extracted data. To do so, first I filtered for chum salmon data, then I re-formated the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+
+```{r Q chum reformat, include=FALSE}
+chum_data <- data |> 
+  filter(fish_species == "chum salmon") |>
+  select(-site, -fish_species, -length_mm, -weight_g) |>
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -sample_date)
+```
+
+```{r Q chum april, include=FALSE}
+chum_april <- chum_data |>
+  filter(sample_date == "5-Apr-16") |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed)) |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r Q chum may, include=FALSE}
+chum_may <- chum_data |>
+  filter(sample_date == "4-May-16") |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+\newpage
+
+Table 8 as included in the 2016 Quatsino report: 
+```{r Q chum join_tables, echo=FALSE, message=FALSE}
+inner_join(chum_april, chum_may) |>
+  kable()
+```
+
+The number of sea lice per species and life stage in Table 8 of the PDF and using the extracted data are the same. Successfully reproducing Table 8 validates the extracted data used to generate this table. Moving on to the next relevant table.
+
+\newpage
+#### Table 10
+\
+
+Table 10 as included in the 2016 Quatsino report: 
+
+![Table 10 from the 2016 Quatsino PDF document](`r here("tables/Quatsino_2016_Table_10.png")`)
+
+Table 10 was reproduced using extracted data. To do so, first I filtered for chinook and pink salmon data, then I re-formatted the data (using gather), then calculated numbers of sea lice for April, then for May. Finally, I brought the April and May data together.
+
+```{r Q chinook and pink reformat, include=FALSE}
+two_species <- c("chinook salmon", "pink salmon")
+                 
+chinook_and_pink_data <- data |> 
+  filter(fish_species %in% two_species) |>
+  select(-site, -fish_species, -length_mm, -weight_g) |>
+  gather(sea_lice_species_and_life_stages, number_of_lice_observed, -sample_date)
+```
+
+```{r chinook and pink april, include=FALSE}
+chinook_and_pink_data_april <- chinook_and_pink_data |>
+  filter(sample_date == "5-Apr-16") |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r Q chinook and pink may, include=FALSE}
+chinook_and_pink_data_may <- chinook_and_pink_data |>
+  filter(sample_date == "4-May-16") |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+\newpage
+
+Table 10 as included in the 2016 Quatsino report: 
+```{r Q chinook and pink join_tables, echo=FALSE, message=FALSE}
+inner_join(chinook_and_pink_data_april, chinook_and_pink_data_may) |>
+  kable()
+```
+
+The number of sea lice per species and life stage in Table 10 of the PDF and using the extracted data are the same. Successfully reproducing Table 10 validates the extracted data used to generate this table. 
+
+#### 2016 conclusions
+\
+
+The data extracted from PDF were used to reproduce the following tables in the report: 
+
+* Table 3: successfully reproduced indicating that related data validated
+* Table 6: successfully reproduced indicating that related data validated
+* Table 8: successfully reproduced indicating that related data validated
+* Table 10: successfully reproduced indicating that related data validated
+
+It is reasonable to conclude that the data extracted from the 2016 Quatsino report is representative of the data in the Appendix III of the report.
+
+### 2017
+
+To be discussed - do we need this?
+
+### 2018
+
+To be discussed - do we need this?
+
+### 2019
+
+To be discussed - do we need this?
+
+### 2020
+
+To be discussed - do we need this? (maybe given different metadata?)
+
+### Conclusion for data extracted from the Quatsino reports
+
+TBC
+
+## Conclusion for validation of the extracted data
+
+TBC
+
+# Next steps
+
+TBC but should include standardization of the data across years and datasets and collations of all dataset into one dataset (will have to add relevant columns for the reports). Once this is done will we need to revalidate the data? 
