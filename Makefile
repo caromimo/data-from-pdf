@@ -74,6 +74,6 @@ clean:
 
 .PHONY: pdf-info
 pdf-info:
-	  for pdf in data/raw/broughton_archipelago/*.pdf; do pdfinfo "$pdf"; done
-	  for pdf in data/raw/discovery_islands/*.pdf; do pdfinfo "$pdf"; done
-	  for pdf in data/raw/quatsino/*.pdf; do pdfinfo "$pdf"; done
+	  for pdf in data/raw/broughton_archipelago/*.pdf; do pdfinfo "$$pdf"; done
+	  for pdf in data/raw/discovery_islands/*.pdf; do pdfinfo "$$pdf"; done
+	  for pdf in data/raw/quatsino/*.pdf; do pdfinfo "$$pdf"; done
