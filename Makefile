@@ -72,8 +72,22 @@ clean:
 		rm -f data/interim/discovery_islands/*
 		rm -f data/interim/quatsino/*
 
+
+.ONESHELL:
 .PHONY: pdf-info
 pdf-info:
-	  for pdf in data/raw/broughton_archipelago/*.pdf; do pdfinfo "$$pdf"; done
-	  for pdf in data/raw/discovery_islands/*.pdf; do pdfinfo "$$pdf"; done
-	  for pdf in data/raw/quatsino/*.pdf; do pdfinfo "$$pdf"; done
+		for pdf in data/raw/broughton_archipelago/*.pdf; do \
+			echo "Name: $$pdf"; \
+			pdfinfo "$$pdf" | grep -E "Producer|Optimized|PDF version"; \
+			echo "\r\n"; \
+		done
+		for pdf in data/raw/discovery_islands/*.pdf; do \
+			echo "Name: $$pdf"; \
+			pdfinfo "$$pdf" | grep -E "Producer|Optimized|PDF version"; \
+			echo "\r\n"; \
+		done
+		for pdf in data/raw/quatsino/*.pdf; do \
+			echo "Name: $$pdf"; \
+			pdfinfo "$$pdf" | grep -E "Producer|Optimized|PDF version"; \
+			echo "\r\n"; \
+		done
