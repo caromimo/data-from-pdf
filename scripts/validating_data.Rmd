@@ -1,5 +1,5 @@
 ---
-title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program reports available as PDF documents"
+title: "Validation of sea lice data extracted from Wild Juvenile Salmonid Monitoring Program PDF reports"
 author: "C. Mimeault"
 date: "June 13, 2021"
 output: pdf_document
@@ -9,7 +9,8 @@ output: pdf_document
 # this code requires R version 4.1
 remove(list=ls())
 knitr::opts_chunk$set(echo = TRUE)
-# this line enables . => until enabled by default in R 4.2
+
+# the following line enables . => until enabled by default in R 4.2
 Sys.setenv("_R_USE_PIPEBIND_" = "true") 
 ```
 
@@ -26,9 +27,9 @@ Some companies operating finfish aquaculture sites on the West Coast of Canada c
 
 As of June 2021, reports were available for surveys conducted from 2014 to 2020 in five different regions of BC. Sea lice counts at the fish level are included in the Appendix III of the following reports:
 
-* Broughton Archipelago (2016-2020)
-* Discovery Islands (2017-2020)
-* Quatsino (2016-2020) 
+* Broughton Archipelago (2016-2020): 5 years
+* Discovery Islands (2017-2020): 4 years
+* Quatsino (2016-2020): 5 years
 
 # Data extraction from PDFs
 
@@ -41,7 +42,240 @@ Extracted data were validated by reproducing some tables included in the reports
 
 ## Broughton Archipelago reports
 
-To be added here
+### 2016
+
+The 2016 Wild Juvenile Salmonid Monitoring Program Broughton Archipelago, BC report can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/broughton-wild-juvenile-salmonid-monitoring-2016.pdf). The report includes, among other things, sea lice counts on chum salmon (CM), coho salmon (CO), Chinook salmon (CH), pink salmon (PK) and threespine stickleback (TSB) collected at 32 beach seine sites in 2016 in Broughton Archipelago. 
+
+```{r BA categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_sites <- tibble(site = as_factor(c("Site 1", "Site 2", "Site 3", "Site 4", "Site 5", "Site 6", "Site 7", "Site 8", "Site 9", "Site 10", "Site 11", "Site 12", "Site 13", "Site 14", "Site 15", "Site 16", "Site 17", "Site 18", "Site 19", "Site 20", "Site 21", "Site 22", "Site A", "Site B", "Site C", "Site D", "Site E", "Site F", "Site G", "Site H", "Site I", "Site J")))
+
+all_sites <- tibble(site = as_factor(c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J")))
+
+all_species <- tibble(fish_species = as_factor(c("pink salmon", "chum salmon", "coho salmon", "chinook salmon", "threespine stickleback")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_c3", "lep_c4", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+
+sampled_dates_all <- c("17-Apr-16", "18-Apr-16", "19-Apr-16", "17-May-16", "18-May-16", "19-May-16")
+sampled_dates_april <- c("17-Apr-16", "18-Apr-16", "19-Apr-16")
+sampled_dates_may <- c("17-May-16", "18-May-16", "19-May-16")
+```
+
+```{r BA 2016 data, include=FALSE}
+# read the data with little cleaning
+data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv")) %>% 
+  clean_names() %>%
+  mutate(site = as_factor(site),
+         fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
+         fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
+         fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
+         fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
+         fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
+         fish_species = as_factor(fish_species)
+         )
+```
+
+#### Table 3
+\
+
+Table 3 as included in the 2016 Broughton Archipelago report: 
+
+![Table 3 from the 2016 Broughton Archipelago PDF document](`r here("tables/Broughton_Archipelago_2016_Table_3.png")`)
+
+Table 3 reproduced using extracted data:
+
+```{r BA table 3, echo=FALSE, message=FALSE}
+data |>
+  count(fish_species) |> . => 
+  left_join(x = all_species, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data |> count()` fish collected which also corresponds to collection totals in Table 3. Successfully reproducing Table 3 validates the extracted data used to generate this table. Moving on to the next relevant table.
+\newpage
+
+#### Table 4
+\
+
+Table 4 as included in the 2016 Broughton Archipelago report: 
+
+![Table 4 from the 2016 Broughton Archipelago PDF document representing the number of individual fish (chum, coho and pink only) collected in the Broughton Archipelago in April and May 2016](`r here("tables/Broughton_Archipelago_2016_Table_4.png")`)
+\newpage
+
+Table 4 reproduced using extracted data:
+```{r BA table 4, echo=FALSE, message=FALSE}
+data |> 
+  filter(fish_species != "threespine stickleback") |>
+  count(site) |> . => 
+  left_join(x = all_sites, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per site in Table 4 of the PDF and using the extracted data are the same. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table. 
+\newpage
+
+#### Table 9
+\
+
+Table 9 as included in the 2016 Broughton Archipelago report: 
+
+![Table 9 from the 2016 Broughton Archipelago PDF document](`r here("tables/Broughton_Archipelago_2016_Table_9.png")`)
+
+\newpage
+
+```{r BA chum reformat, include=FALSE}
+chum_data <- data |> 
+  filter(fish_species == "chum salmon") |> 
+  select(-site, -site_name, -fish_species, -length_mm, -weight_g) |>
+  gather(key = "sea_lice_species_and_life_stages", value = "number_of_lice_observed", -sample_date) |>
+  drop_na("number_of_lice_observed")
+```
+
+```{r BA chum april, include=FALSE}
+chum_data_april <- chum_data |>
+  filter(sample_date %in% sampled_dates_april) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r BA chum may, include=FALSE}
+chum_data_may <- chum_data |>
+  filter(sample_date %in% sampled_dates_may) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+Table 9 reproduced using extracted data:
+
+```{r BA chum join_tables, echo=FALSE, message=FALSE}
+inner_join(chum_data_april, chum_data_may)|>
+  kable()
+```
+
+The sea lice counts on coho salmon collected in 2016 in Table 9 of the PDF and using the extracted data are the same (one NA value had to be dropped but it did not affect the results). Successfully reproducing Table 9 validates the extracted data used to generate this table. 
+
+\newpage
+
+#### Table 11
+\
+
+Table 11 as included in the 2016 Broughton Archipelago report: 
+
+![Table 11 from the 2016 Broughton Archipelago PDF document](`r here("tables/Broughton_Archipelago_2016_Table_11.png")`)
+
+\newpage
+
+```{r BA pink reformat, include=FALSE}
+pink_data <- data |> 
+  filter(fish_species == "pink salmon") |> 
+  select(-site, -site_name, -fish_species, -length_mm, -weight_g) |>
+  gather(key = "sea_lice_species_and_life_stages", value = "number_of_lice_observed", -sample_date)
+```
+
+```{r BA pink april, include=FALSE}
+pink_data_april <- pink_data |>
+  filter(sample_date %in% sampled_dates_april) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r BA pink may, include=FALSE}
+pink_data_may <- pink_data |>
+  filter(sample_date %in% sampled_dates_may) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+Table 11 reproduced using extracted data:
+
+```{r BA pink join_tables, echo=FALSE, message=FALSE}
+inner_join(pink_data_april, pink_data_may)|>
+  kable()
+```
+
+The sea lice counts on pink salmon collected in 2016 in Table 11 of the PDF and using the extracted data are NOT the same. There is a difference for the number of sea lice in LEP C3 in May (2 in the report vs 1 in the table reproduced with the extracted data). The error is probably not coming from the conversion of PDF into data as TOTAL LEP in May should add up to 26 with the numbers included in the table rather than to 25 as in the table and as in reproduced table. To verify, I referred to the data included in Appendix III of the PDF (using the PDF rather that the extracted data). There is only one instance of LEP C3 on pink salmon in May 2016 (on the 17th at Lady Island, see page 59). In other words, the results in Table 11 reproduced using extracted data are representative of the data in the Appendix III of the PDF. The discrepancy is explained. Successfully reproducing Table 11 validates the extracted data used to generate this table. Moving on to the next relevant table.
+\newpage
+
+#### Table 13
+\
+
+Table 13 as included in the 2016 Broughton Archipelago report: 
+
+![Table 13 from the 2016 Broughton Archipelago PDF document](`r here("tables/Broughton_Archipelago_2016_Table_13.png")`)
+
+\newpage
+
+```{r BA coho reformat, include=FALSE}
+coho_data <- data |> 
+  filter(fish_species == "coho salmon") |> 
+  select(-site, -site_name, -fish_species, -length_mm, -weight_g) |>
+  gather(key = "sea_lice_species_and_life_stages", value = "number_of_lice_observed", -sample_date)
+```
+
+```{r BA coho april, include=FALSE}
+coho_data_april <- coho_data |>
+  filter(sample_date %in% sampled_dates_april) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_april = sum(number_of_lice_observed))  |> . =>
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+```{r BA coho may, include=FALSE}
+coho_data_may <- coho_data |>
+  filter(sample_date %in% sampled_dates_may) |>
+  group_by(sea_lice_species_and_life_stages) |>
+  summarize(lice_counted_may = sum(number_of_lice_observed)) |> . => 
+  left_join(x = all_sea_lice_species_and_life_stages, y = .)
+```
+
+Table 13 reproduced using extracted data:
+
+```{r BA coho join_tables, echo=FALSE, message=FALSE}
+inner_join(coho_data_april, coho_data_may)|>
+  kable()
+```
+
+The sea lice counts on coho salmon collected in 2016 in Table 13 of the PDF and using the extracted data are the same. Successfully reproducing Table 13 validates the extracted data used to generate this table. 
+
+#### 2016 conclusions
+\
+
+The data extracted from PDF were used to reproduce the following tables in the report: 
+
+* Table 3: successfully reproduced indicating that related data validated
+* Table 4: successfully reproduced indicating that related data validated
+* Table 9: successfully reproduced indicating that related data validated
+* Table 11: successfully reproduced indicating that related data validated
+* Table 13: successfully reproduced indicating that related data validat
+
+It is reasonable to conclude that the data extracted from the 2016 Broughton Archipelago report is representative of the data in the Appendix III of the report.
+
+### 2017
+
+TBC - is this needed?
+
+### 2018
+
+TBC - is this needed?
+
+### 2019
+
+TBC - is this needed?
+
+### 2020
+
+TBC - is this needed? (maybe given different metadata?)
+
+## Conclusion for data extracted from the Broughton Archipelago reports
+
+TBC
 \newpage
 
 ## Discovery Islands reports
@@ -357,6 +591,7 @@ For Site 1:
 * May 4, 2016: 5 fish collected (see page 40). 
 
 So a total of `r 31+17+5` fish collected at Site 1 as in Table 4 reproduced using extracted data.
+\newpage
 
 For Site 9: 
 
