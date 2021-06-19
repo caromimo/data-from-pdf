@@ -257,17 +257,9 @@ The data extracted from PDF were used to reproduce the following tables in the r
 
 It is reasonable to conclude that the data extracted from the 2016 Broughton Archipelago report is representative of the data in the Appendix III of the report.
 
-### 2017
+### 2017 to 2019
 
-TBC - is this needed?
-
-### 2018
-
-TBC - is this needed?
-
-### 2019
-
-TBC - is this needed?
+None of the discrepancies in the tables reproduced using data extracted from the 2016 Broughton Archipelago report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2017, 2018 and 2019 report to behave the same way as for the 2016 report. Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
 
 ### 2020
 
@@ -498,13 +490,9 @@ The data extracted from PDF were used to reproduce the following tables in the r
 
 It is reasonable to conclude that the data extracted from the 2017 Discovery Islands report are representative of the data in the Appendix III of the report. The few discrepencies were explained and were not related to an error in the extracted data.
 
-### 2018
+### 2018 and 2019
 
-To be discussed - do we need this?
-
-### 2019
-
-To be discussed - do we need this?
+None of the discrepancies in the tables reproduced using data extracted from the 2017 Discovery Islands report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2018 and 2019 report to behave the same way as for the 2017 report. Consequently, the data extracted from the 2018 and 2019 do not need to be validated.To be discussed - do we need this?
 
 ### 2020
 
@@ -702,17 +690,9 @@ The data extracted from PDF were used to reproduce the following tables in the r
 
 It is reasonable to conclude that the data extracted from the 2016 Quatsino report is representative of the data in the Appendix III of the report.
 
-### 2017
+### 2017 to 2019
 
-To be discussed - do we need this?
-
-### 2018
-
-To be discussed - do we need this?
-
-### 2019
-
-To be discussed - do we need this?
+None of the discrepancies in the tables reproduced using data extracted from the 2016 Quatsino report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2017, 2018 and 2019 report to behave the same way as for the 2016 report. Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
 
 ### 2020
 
