@@ -706,6 +706,10 @@ TBC
 
 TBC
 
-# Next steps
+# Standardization of datasets
 
-TBC but should include standardization of the data across years and datasets and collations of all dataset into one dataset (will have to add relevant columns for the reports). Once this is done will we need to revalidate the data? 
+# Collation of datasets
+
+# Re-validation of dataset
+
+# Final dataset
