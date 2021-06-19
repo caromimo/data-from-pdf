@@ -259,7 +259,15 @@ It is reasonable to conclude that the data extracted from the 2016 Broughton Arc
 
 ### 2017 to 2019
 
-None of the discrepancies in the tables reproduced using data extracted from the 2016 Broughton Archipelago report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2017, 2018 and 2019 report to behave the same way as for the 2016 report. Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
+The Wild Juvenile Salmonid Monitoring Program Broughton Archipelago, BC report for 2017, 2018 and 2019 can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/broughton-wild-juvenile-salmonid-monitoring-2017.pdf), [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/broughton-wild-juvenile-salmonid-monitoring-2018.pdf) and [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/broughton-wild-juvenile-salmonid-monitoring-2019.pdf), respectively. 
+
+It is reasonable to expect the extraction of data from the 2017, 2018 and 2019 reports to have behaved the same way as for the 2016 report given that: 
+
+* the same method was used to extract data from Appendix III for all reports;
+* none of the discrepancies in the tables reproduced using data extracted from the 2016 Broughton Archipelago report were due to errors in the extracted data; and
+* the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version.
+
+Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
 
 ### 2020
 
@@ -492,7 +500,15 @@ It is reasonable to conclude that the data extracted from the 2017 Discovery Isl
 
 ### 2018 and 2019
 
-None of the discrepancies in the tables reproduced using data extracted from the 2017 Discovery Islands report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2018 and 2019 report to behave the same way as for the 2017 report. Consequently, the data extracted from the 2018 and 2019 do not need to be validated.To be discussed - do we need this?
+The Wild Juvenile Salmonid Monitoring Program Discovery Islands, BC report for 2018 and 2019 can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/discovery-islands-juvenile-salmonid-monitoring-2018.pdf) and  [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/discovery-islands-juvenile-salmonid-monitoring-2019.pdf), respectively. 
+
+It is reasonable to expect the extraction of data from the 2018 and 2019 reports to have behaved the same way as for the 2017 report given that: 
+
+* the same method was used to extract data from Appendix III for all reports;
+* none of the discrepancies in the tables reproduced using data extracted from the 2017 Discovery Islands report were due to errors in the extracted data; and
+* the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version.
+
+Consequently, the data extracted from the 2018 and 2019 do not need to be validated.
 
 ### 2020
 
@@ -692,7 +708,15 @@ It is reasonable to conclude that the data extracted from the 2016 Quatsino repo
 
 ### 2017 to 2019
 
-None of the discrepancies in the tables reproduced using data extracted from the 2016 Quatsino report were due to errors in the extracted data. Additionally, the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version. It is therefore reasonable to expect the extraction of data from the 2017, 2018 and 2019 report to behave the same way as for the 2016 report. Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
+The Wild Juvenile Salmonid Monitoring Program Quatsino Sound, BC report for 2017, 2018 and 2019 can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/quatsino-wild-juvenile-salmonid-monitoring-2017.pdf), [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/quatsino-wild-juvenile-salmonid-monitoring-2018.pdf) and [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2019/08/quatsino-wild-juvenile-salmonid-monitoring-2019.pdf), respectively. 
+
+It is reasonable to expect the extraction of data from the 2017, 2018 and 2019 reports to have behaved the same way as for the 2016 report given that: 
+
+* the same method was used to extract data from Appendix III for all reports;
+* none of the discrepancies in the tables reproduced using data extracted from the 2016 Quatsino Sound report were due to errors in the extracted data; and
+* the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version.
+
+Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
 
 ### 2020
 
