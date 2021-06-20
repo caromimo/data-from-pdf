@@ -265,14 +265,83 @@ It is reasonable to expect the extraction of data from the 2017, 2018 and 2019 r
 
 * the same method was used to extract data from Appendix III for all reports;
 * none of the discrepancies in the tables reproduced using data extracted from the 2016 Broughton Archipelago report were due to errors in the extracted data; and
-* the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version.
+* the metadata of the PDF files for 2016, 2017, 2018 and 2019 indicate that all reports were produced using Microsoft® Word 2013 and PDF version 1.5.
 
 Consequently, the data extracted from the 2017, 2018 and 2019 do not need to be validated.
 
 ### 2020
 
-TBC - is this needed? (maybe given different metadata?)
+Although the data for the 2020 report were extracted the same way as for previous years, the metadata of the PDF indicate that it was produced with Microsoft® Word for Microsoft 365 and with PDF version 1.7. Consequently, the extracted data were validated. 
 
+The 2020 Wild Juvenile Salmonid Monitoring Program Broughton Archipelago, BC report can be found [here](https://corpsite.azureedge.net/corpsite/wp-content/uploads/sites/7/2020/07/Broughton-Wild-Juvenile-Salmonid-Monitoring-2020.pdf). The report includes, among other things, sea lice counts on chum salmon, coho salmon and pink salmon collected at beach seine sites in 2020 in the Broughton Archipelago. 
+
+```{r 2020 BA categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_sites <- tibble(site_name = as_factor(c("Hanson", "Freshwater Bay", "Larsen Island Fish Farm", "Swanson Island Fish Farm", "Midsummer Island Fish Farm (Potts Bay)", "Chop Bay", "Lady Island", "Doctor Island Fish Farm", "Humphrey Rock Fish Farm", "Oline Point", "Pumish Point", "Sargeaunt Pass Fish Farm", "Lance Bay", "Batt Bluff West", "Batt Bluff West", "Brent Bay", "Hoeya South", "Tomakstum Island", "Matsiu Bay", "Hoeya Sound", "Mount Frederick Bay", "Shelterless Bay", "London Point", "Miller Point", "Kwatsi Bay", "Glacier Falls Fish Farm", "Viner Sound", "Jumper Island", "Wicklow Point", "Arthur Point", "Baker Island", "Denham Island", "Penphrase Pass", "Harry Bay", "Wakeman 3", "Wakeman 4", "McKenzie Cove", "Phillip Point West", "Sutlej North", "Codrington Point", "Wehlis Bay Fish Farm", "Popplewell Point", "Alder Point", "Gwayasdums 1", "Nimpkish Estuary", "Kokish Estuary")))
+
+all_species <- tibble(fish_species = as_factor(c("chum salmon", "pink salmon", "coho salmon", "chinook salmon", "sockeye salmon", "threespine stickleback")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+
+sampled_dates_all <- c("30-Mar-20", "31-Mar-20", "1-Apr-20", "17-Apr-20", "18-Apr-20", "14-May-20", "15-May-20")
+sampled_dates_late_march_early_april <- c("30-Mar-20", "31-Mar-20", "1-Apr-20")
+sampled_dates_mid_april <- c("17-Apr-20", "18-Apr-20")
+sampled_dates_mid_may <- c("14-May-20", "15-May-20")
+```
+
+```{r BA 2020 data, include=FALSE}
+# read the data with little cleaning
+data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv")) |> 
+  clean_names() |>
+  mutate(site_name = as_factor(site_name),
+         fish_species = replace(fish_species, fish_species == "Chum", "chum salmon"),
+         fish_species = replace(fish_species, fish_species == "Pink", "pink salmon"),
+         fish_species = replace(fish_species, fish_species == "Coho", "coho salmon"),
+         fish_species = as_factor(fish_species)
+         )
+```
+
+#### Table 3
+\
+
+Table 3 as included in the 2020 Broughton Archipelago report: 
+
+![Table 3 from the 2020 Broughton Archipelago PDF document](`r here("tables/Broughton_Archipelago_2020_Table_3.png")`)
+
+Table 3 reproduced using extracted data:
+
+```{r BA 2020 table 3, echo=FALSE, message=FALSE}
+data |>
+  count(fish_species) |> . => 
+  left_join(x = all_species, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per species in Table 3 of the PDF and using the extracted data are the same. Additionally, based on the extracted data, there were `r data |> count()` fish collected which also corresponds to collection totals in Table 3. Successfully reproducing Table 3 validates the extracted data used to generate this table. Moving on to the next relevant table.
+\newpage
+
+#### Table 4
+\
+
+Table 4 as included in the 2020 Broughton Archipelago report: 
+
+![Table 4 from the 2020 Broughton Archipelago PDF document representing the number of individual fish (chum, coho and pink only) collected in the Broughton Archipelago in March, April and May 2020](`r here("tables/Broughton_Archipelago_2020_Table_4.png")`)
+\newpage
+
+Table 4 reproduced using extracted data:
+```{r BA 2020 table 4, echo=FALSE, message=FALSE}
+data |> 
+  filter(fish_species != "threespine stickleback") |>
+  count(site_name) |> . => 
+  left_join(x = all_sites, y = .) |> 
+  mutate(n = replace_na(n, 0)) |>
+  kable()
+```
+
+The total number of individuals collected per site in Table 4 of the PDF and using the extracted data are the same. Successfully reproducing Table 4 validates the extracted data used to generate this table. Moving on to the next relevant table. 
+\newpage
 ### Conclusion for data extracted from the Broughton Archipelago reports
 
 TBC
