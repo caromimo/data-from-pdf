@@ -670,6 +670,55 @@ None of the discrepancies were due to errors in the extracted data. I therefore 
 
 # Standardization of datasets
 
+All datasets within a given region were standardized. 
+
+## Broughton Archipelago reports
+
+```{r all BA categories, include=FALSE}
+# specify categories used in data (sites, fish species, sea lice species and life stage)
+
+all_sites <- tibble(site = as_factor(c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J")))
+
+all_species <- tibble(fish_species = as_factor(c("pink salmon", "chum salmon", "coho salmon", "chinook salmon", "threespine stickleback")))
+
+all_sea_lice_species_and_life_stages <- tibble(sea_lice_species_and_life_stages = as_factor(c("lep_co", "lep_c1", "lep_c2", "lep_c3", "lep_c4", "lep_pam", "lep_paf", "lep_am", "lep_af", "lep_total", "cal_co", "cal_c1", "cal_c2", "cal_c3", "cal_c4", "cal_pam", "cal_paf", "cal_am", "cal_af", "cal_total")))
+
+sampled_dates_all <- c("17-Apr-16", "18-Apr-16", "19-Apr-16", "17-May-16", "18-May-16", "19-May-16")
+sampled_dates_april <- c("17-Apr-16", "18-Apr-16", "19-Apr-16")
+sampled_dates_may <- c("17-May-16", "18-May-16", "19-May-16")
+```
+
+```{r all BA 2016 data, include=FALSE}
+# read the data with little cleaning
+BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv")) %>% 
+  clean_names() %>%
+  mutate(site = as_factor(site),
+         fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
+         fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
+         fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
+         fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
+         fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
+         fish_species = as_factor(fish_species)
+         )
+
+BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) %>% 
+  clean_names()
+
+BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv")) %>% 
+  clean_names()
+
+BA_2019_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2019.csv")) %>% 
+  clean_names()
+
+BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv")) %>% 
+  clean_names()
+
+```
+
+
+
+
+
 # Collation of datasets
 
 # Re-validation of dataset
