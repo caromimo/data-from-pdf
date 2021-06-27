@@ -688,30 +688,52 @@ sampled_dates_april <- c("17-Apr-16", "18-Apr-16", "19-Apr-16")
 sampled_dates_may <- c("17-May-16", "18-May-16", "19-May-16")
 ```
 
-```{r all BA 2016 data, include=FALSE}
+```{r all BA 2016-2020 data, include=FALSE}
 # read the data with little cleaning
-BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv")) %>% 
-  clean_names() %>%
-  mutate(site = as_factor(site),
+BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv")) |>
+  clean_names() |>
+  rename(
+    date_of_seine = sample_date,
+    site_number = site) |>
+  mutate(site_number = as_factor(site_number),
          fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
          fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
          fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
-         fish_species = as_factor(fish_species)
-         )
+         fish_species = as_factor(fish_species)) |>
+  add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
+  add_column(year = NA, .after = "date_yyyy_mm_dd") |>
+  add_column(month = NA, .after = "year") |>
+  add_column(week = NA, .after = "month") |>
+  mutate(
+    date_yyyy_mm_dd = as_date(date_of_seine),
+    year = year(date_yyyy_mm_dd),
+    month = month(date_yyyy_mm_dd),
+    week = week(date_yyyy_mm_dd)) 
 
-BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) %>% 
+BA_2016_data |>
+  add_column(date_YYYY_MM_DD = as_date(date_of_seine), .after = "date_of_seine")
+
+BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) |>
   clean_names()
 
-BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv")) %>% 
+BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv")) |>
   clean_names()
 
 BA_2019_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2019.csv")) %>% 
-  clean_names()
+  clean_names() |>
+  rename(date = date_of_seine) |>
+  add_column(site = NA, .after = "date" ) |>
+  add_column(lep_c3 = NA, .after = "lep_c2") |>
+  add_column(lep_c4 = NA, .after = "lep_c3")
 
-BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv")) %>% 
-  clean_names()
+BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv")) |> 
+  clean_names() |>
+  rename(date = date_of_seine) |>
+  add_column(site = NA, .after = "date" ) |>
+  add_column(lep_c3 = NA, .after = "lep_c2") |>
+  add_column(lep_c4 = NA, .after = "lep_c3")
 
 ```
 
