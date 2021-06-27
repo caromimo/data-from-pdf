@@ -688,7 +688,7 @@ sampled_dates_april <- c("17-Apr-16", "18-Apr-16", "19-Apr-16")
 sampled_dates_may <- c("17-May-16", "18-May-16", "19-May-16")
 ```
 
-```{r all BA 2016-2020 data, include=FALSE}
+```{r standardize BA 2016, include=FALSE}
 # read the data with little cleaning
 BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv")) |>
   clean_names() |>
@@ -707,7 +707,7 @@ BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
   add_column(month = NA, .after = "year") |>
   add_column(week = NA, .after = "month") |>
   mutate(
-    date_yyyy_mm_dd = as_date(date_of_seine),
+    date_yyyy_mm_dd = dmy(date_of_seine),
     year = year(date_yyyy_mm_dd),
     month = month(date_yyyy_mm_dd),
     week = week(date_yyyy_mm_dd),
@@ -717,24 +717,46 @@ BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
     capture_method = "beach seine",
     reference = "MSB WJSMP Broughton Archipelago 2016"
     )
+```
 
+```{r standardize BA 2017, include=FALSE}
 
-ppendix_III <- appendix_III %>%
+test <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) |>
+  clean_names()
+
+BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) |>
+  clean_names() |>
+  rename(site_number = location) |>
+  mutate(fish_species = replace(fish_species, fish_species == "CM", "chum salmon"),
+         fish_species = replace(fish_species, fish_species == "PK", "pink salmon"),
+         fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
+         fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
+         fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
+         fish_species = as_factor(fish_species)) |>
+  add_column(site_name = NA, .after = "site_number") |>
+  add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
+  add_column(year = NA, .after = "date_yyyy_mm_dd") |>
+  add_column(month = NA, .after = "year") |>
+  add_column(week = NA, .after = "month") |>
   mutate(
-    sample_date_nc = dmy(sample_date),
-    year_sample_nc = as.factor(year(sample_date_nc)),
-    month_sample_nc = as.factor(month(sample_date_nc)),
-    area_nc = "Broughton Archipelago",
-    source_nc = "industry data",
-    reference_nc = "MSB, WJSMP, Broughton Archipelago 2016"
+    date_yyyy_mm_dd = dmy(date_of_seine),
+    year = year(date_yyyy_mm_dd),
+    month = month(date_yyyy_mm_dd),
+    week = week(date_yyyy_mm_dd),
+    area = "Broughton Archipelago",
+    data_type = "industry",
+    hosts = "wild fish",
+    capture_method = "beach seine",
+    reference = "MSB WJSMP Broughton Archipelago 2017"
     )
 
 
-BA_2016_data |>
-  add_column(date_YYYY_MM_DD = as_date(date_of_seine), .after = "date_of_seine")
 
-BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv")) |>
-  clean_names()
+```
+
+Are site numbers the same in a given area from year to year?
+Need to extract the site numbers, names and locations. 
+
 
 BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv")) |>
   clean_names()
