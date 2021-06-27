@@ -4,4 +4,5 @@
 .Ruserdata
 data
 scripts/extract_with_pdf_tools.R
-scripts/archives
+scripts/archivesi
+tables/*
