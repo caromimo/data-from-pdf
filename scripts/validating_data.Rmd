@@ -710,7 +710,25 @@ BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
     date_yyyy_mm_dd = as_date(date_of_seine),
     year = year(date_yyyy_mm_dd),
     month = month(date_yyyy_mm_dd),
-    week = week(date_yyyy_mm_dd)) 
+    week = week(date_yyyy_mm_dd),
+    area = "Broughton Archipelago",
+    data_type = "industry",
+    hosts = "wild fish",
+    capture_method = "beach seine",
+    reference = "MSB WJSMP Broughton Archipelago 2016"
+    )
+
+
+ppendix_III <- appendix_III %>%
+  mutate(
+    sample_date_nc = dmy(sample_date),
+    year_sample_nc = as.factor(year(sample_date_nc)),
+    month_sample_nc = as.factor(month(sample_date_nc)),
+    area_nc = "Broughton Archipelago",
+    source_nc = "industry data",
+    reference_nc = "MSB, WJSMP, Broughton Archipelago 2016"
+    )
+
 
 BA_2016_data |>
   add_column(date_YYYY_MM_DD = as_date(date_of_seine), .after = "date_of_seine")
