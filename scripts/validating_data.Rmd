@@ -701,7 +701,9 @@ BA_2016_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
          fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
-         fish_species = as_factor(fish_species)) |>
+         fish_species = as_factor(fish_species),
+         length_mm = as.numeric(length_mm),
+         weight_g = as.numeric(weight_g)) |>
   add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
   add_column(year = NA, .after = "date_yyyy_mm_dd") |>
   add_column(month = NA, .after = "year") |>
@@ -730,7 +732,9 @@ BA_2017_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
          fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
-         fish_species = as_factor(fish_species)) |>
+         fish_species = as_factor(fish_species),
+         length_mm = as.numeric(length_mm),
+         weight_g = as.numeric(weight_g)) |>
   add_column(site_name = NA, .after = "site_number") |>
   add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
   add_column(year = NA, .after = "date_yyyy_mm_dd") |>
@@ -762,7 +766,9 @@ BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
          fish_species = replace(fish_species, fish_species == "CO", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "CH", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "TSB", "threespine stickleback"),
-         fish_species = as_factor(fish_species)) |>
+         fish_species = as_factor(fish_species),
+         length_mm = as.numeric(length_mm),
+         weight_g = as.numeric(weight_g)) |>
   add_column(site_name = NA, .after = "site_number") |>
   add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
   add_column(year = NA, .after = "date_yyyy_mm_dd") |>
@@ -794,7 +800,9 @@ BA_2019_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
          fish_species = replace(fish_species, fish_species == "Coho", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "Chinook", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "Stickleback", "threespine stickleback"),
-         fish_species = as_factor(fish_species)) |>
+         fish_species = as_factor(fish_species),
+         length_mm = as.numeric(length_mm),
+         weight_g = as.numeric(weight_g)) |>
   add_column(site_number = NA, .before = "site_name") |>
   add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
   add_column(year = NA, .after = "date_yyyy_mm_dd") |>
@@ -825,7 +833,9 @@ BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
          fish_species = replace(fish_species, fish_species == "Coho", "coho salmon"),
          fish_species = replace(fish_species, fish_species == "Chinook", "chinook salmon"),
          fish_species = replace(fish_species, fish_species == "Stickleback", "threespine stickleback"),
-         fish_species = as_factor(fish_species)) |>
+         fish_species = as_factor(fish_species),
+         length_mm = as.numeric(length_mm),
+         weight_g = as.numeric(weight_g)) |>
   add_column(site_number = NA, .before = "site_name") |>
   add_column(date_yyyy_mm_dd = NA, .after = "date_of_seine") |>
   add_column(year = NA, .after = "date_yyyy_mm_dd") |>
@@ -848,33 +858,13 @@ BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
   add_column(lep_c4 = NA, .after = "lep_c3") 
 ```
 
+```{r collate BA reports, include=FALSE}
+BA_data <- bind_rows(BA_2016_data, BA_2017_data, BA_2018_data, BA_2019_data, BA_2020_data)
+```
 
 Are site numbers the same in a given area from year to year?
 Need to extract the site numbers, names and locations. 
-
-
-BA_2018_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv")) |>
-  clean_names()
-
-BA_2019_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2019.csv")) %>% 
-  clean_names() |>
-  rename(date = date_of_seine) |>
-  add_column(site = NA, .after = "date" ) |>
-  add_column(lep_c3 = NA, .after = "lep_c2") |>
-  add_column(lep_c4 = NA, .after = "lep_c3")
-
-BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv")) |> 
-  clean_names() |>
-  rename(date = date_of_seine) |>
-  add_column(site = NA, .after = "date" ) |>
-  add_column(lep_c3 = NA, .after = "lep_c2") |>
-  add_column(lep_c4 = NA, .after = "lep_c3")
-
-```
-
-
-
-
+Some of the sites do not have the same lat long between the years. 
 
 # Collation of datasets
 
