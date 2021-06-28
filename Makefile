@@ -10,6 +10,14 @@ extract-broughton-archipelago-2016-2020:
 		camelot -p 51-61 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2019.csv lattice ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2019.pdf
 		camelot -p 44-63 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2020.csv lattice ./data/raw/broughton_archipelago/Broughton-Wild-Juvenile-Salmonid-Monitoring-2020.pdf
 
+.PHONY: extract-broughton-archipelago-sites
+extract-broughton-archipelago-sites:
+		camelot -p 13 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_locations_2016.csv stream ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2016.pdf
+		camelot -p 13 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_locations_2017.csv stream ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2017.pdf
+		camelot -p 13 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_locations_2018.csv stream ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2018.pdf
+		camelot -p 13-14 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_locations_2019.csv stream ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2019.pdf
+		camelot -p 12 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_locations_2020.csv stream ./data/raw/broughton_archipelago/Broughton-Wild-Juvenile-Salmonid-Monitoring-2020.pdf
+
 .PHONY: extract-discovery-islands-2017-2020
 extract-discovery-islands-2017-2020:
 		camelot -p 74-106 -f csv --output ./data/interim/discovery_islands/discovery_islands_2017.csv lattice ./data/raw/discovery_islands/discovery-islands-juvenile-salmonid-monitoring-2017.pdf
@@ -37,6 +45,14 @@ collate-broughton-archipelago-per-year:
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2018* > data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2019* > data/interim/broughton_archipelago/all_broughton_archipelago_2019.csv
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2020* > data/interim/broughton_archipelago/all_broughton_archipelago_2020.csv
+
+.PHONY: collate-broughton-archipelago-sites
+collate-broughton-archipelago-sites:
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_locations_2016* > data/interim/broughton_archipelago/all_broughton_archipelago_locations_2016.csv
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_locations_2017* > data/interim/broughton_archipelago/all_broughton_archipelago_locations_2017.csv
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_locations_2018* > data/interim/broughton_archipelago/all_broughton_archipelago_locations_2018.csv
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_locations_2019* > data/interim/broughton_archipelago/all_broughton_archipelago_locations_2019.csv
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_locations_2020* > data/interim/broughton_archipelago/all_broughton_archipelago_locations_2020.csv
 
 .PHONY: collate-discovery-islands-per-year
 collate-discovery-islands-per-year:
