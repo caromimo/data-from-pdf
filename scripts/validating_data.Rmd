@@ -674,6 +674,59 @@ All datasets within a given region were standardized.
 
 ## Broughton Archipelago reports
 
+```{r sites in BA, include=FALSE}
+sites_BA_2016 <- tibble(site = as_factor(c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J")))
+
+locations_BA_2016 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2016.csv")) |> 
+  clean_names()
+
+locations_BA_2017 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2017.csv")) |> 
+  clean_names()
+
+locations_BA_2018 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2018.csv")) |> 
+  clean_names()
+
+locations_BA_2019 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2019.csv")) |> 
+  clean_names()
+
+locations_BA_2020 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2020.csv")) |> 
+  clean_names()
+
+# the GPS coordinates are provided an incomplete degrees and decimal minutes (DD:MM.MM) format as character strings
+# converting the provided latitudes and longitudes in to the decimal degrees (DD.DD) format with the parzer package
+BA_locations <- bind_rows(locations_BA_2016, locations_BA_2017, locations_BA_2018, locations_BA_2019, locations_BA_2020) |>
+  mutate(
+    lat_decimal_degrees = parse_lat(latitude),
+    long_decimal_degrees = parse_lon(paste(longitude, "W"))
+  )
+  
+  
+  mutate(site_number = as_factor(site_number),
+         site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
+         site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
+         site_name = replace(site_name, site_name == "Mount Frederick", "Mount Frederick Bay"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Wicklow Bay", "Wicklow Point")
+         ) |>
+  distinct()
+
+library("sf")
+
+test <- BA_locations %<>% 
+  st_as_sf(coords = c("longitude", "latitude")) |> 
+  st_sf(crs = 4326)
+
+
+fl_accidents %<>% 
+  st_as_sf(coords = c("longitud", "latitude")) %>% 
+  st_sf(crs = 4326)
+
+
+
+```
+
+
 ```{r all BA categories, include=FALSE}
 # specify categories used in data (sites, fish species, sea lice species and life stage)
 
