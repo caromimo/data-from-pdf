@@ -692,15 +692,15 @@ locations_BA_2019 <- read_csv(here("data/interim/broughton_archipelago/all_broug
 locations_BA_2020 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2020.csv")) |> 
   clean_names()
 
-# the GPS coordinates are provided an incomplete degrees and decimal minutes (DD:MM.MM) format as character strings
-# converting the provided latitudes and longitudes in to the decimal degrees (DD.DD) format with the parzer package
+# the GPS coordinates are provided an incomplete (missing negative sign in longitudes) degrees and decimal minutes (DD:MM.MM) format as character strings
+# converting the provided latitudes and longitudes to the decimal degrees (DD.DD) format with the parzer package
+# note that the coordinates for Sambo Point refer to a location on land which seems to be an error
+# no fish sampled or collected at Sambo Point so leaving it in without correction
 BA_locations <- bind_rows(locations_BA_2016, locations_BA_2017, locations_BA_2018, locations_BA_2019, locations_BA_2020) |>
   mutate(
     lat_decimal_degrees = parse_lat(latitude),
     long_decimal_degrees = parse_lon(paste(longitude, "W"))
-  )
-  
-  
+  ) |>
   mutate(site_number = as_factor(site_number),
          site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
          site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
@@ -711,6 +711,48 @@ BA_locations <- bind_rows(locations_BA_2016, locations_BA_2017, locations_BA_201
          ) |>
   distinct()
 
+BA_clean_locations <- BA_locations |>
+  filter(
+    (site_name == "Alder Bay" & site_number == "I") |
+    (site_name == "Arthur Point" & site_number == "21") |
+    (site_name == "Baker Island" & site_number == "19") |
+    (site_name == "Batt Bluff West") |
+    (site_name == "Bennett Point Fish Farm (Noo-La)") |
+    (site_name == "Brent Bay" & site_number == "6") |
+    (site_name == "Chop Bay" & site_number == "3") |
+    (site_name == "Codrington Point" & site_number == "G") |
+    (site_name == "Denham Island" & site_number == "18") |
+    (site_name == "Doctor Island Fish Farm" & site_number == "5") |
+    (site_name == "Freshwater Bay") |
+    (site_name == "Glacier Falls Fish Farm" & site_number == "16") |
+    (site_name == "Gwayasdums 1") |
+    (site_name == "Hanson Island")
+  ) |>
+  select(site_number, site_name, lat_decimal_degrees, long_decimal_degrees)
+
+
+    site_name == "Baker Island" & site_number == "19",
+    site_name == "Batt Bluff West",
+    site_name == "Bennett Point Fish Farm (Noo-La)",
+    site_name == "Brent Bay" & site_number == "6"
+    )
+
+|>
+  mutate(lat_decimal_degrees = ifelse(site_name == "Alder Bay", "50.87247", lat_decimal_degrees)) |>
+  mutate(site_number = ifelse(site_name == "Alder Bay", "I", site_number)) |>
+  distinct() 
+
+
+final <- BA_locations |>
+  transmute(
+    site_number = site_number,
+    site_name = site_name,
+    lat_decimal_degrees = lat_decimal_degrees,
+    long_decimal_degrees = long_decimal_degrees
+  ) |>
+  distinct()
+  
+  
 library("sf")
 
 test <- BA_locations %<>% 
@@ -913,6 +955,7 @@ BA_2020_data <- read_csv(here("data/interim/broughton_archipelago/all_broughton_
 
 ```{r collate BA reports, include=FALSE}
 BA_data <- bind_rows(BA_2016_data, BA_2017_data, BA_2018_data, BA_2019_data, BA_2020_data)
+BA_data |> write_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv"))
 ```
 
 Are site numbers the same in a given area from year to year?
