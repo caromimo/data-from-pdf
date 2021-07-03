@@ -1,0 +1,107 @@
+---
+title: "Creation of master sampling location lists"
+author: "C. Mimeault"
+date: "June 13, 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+# this code requires R version 4.1
+remove(list=ls())
+knitr::opts_chunk$set(echo = TRUE)
+
+# the following line enables . => until enabled by default in R 4.2
+Sys.setenv("_R_USE_PIPEBIND_" = "true") 
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(here)
+library(janitor)
+library(formattable)
+library(stringdist)
+library(knitr)
+library(parzer)
+```
+
+This document complements the document in which data extracted from juvenile wild salmon sea lice monitoring in British Columbia (BC) reports (that can be found [here](https://mowi.com/caw/sustainability/wild-salmonid-lice-monitoring/)) were extracted from PDF to .csv format. 
+
+There are three main regions:
+
+* Broughton Archipelago
+* Discovery Islands
+* Quatsino
+
+# Standardization of sampling locations
+
+## Broughton Archipelago
+
+```{r BA data, include=FALSE}
+BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) %>% 
+  clean_names()
+```
+
+```{r BA locations, include=FALSE}
+locations_BA_2016 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2016.csv")) |> 
+  clean_names()
+
+locations_BA_2017 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2017.csv")) |> 
+  clean_names()
+
+locations_BA_2018 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2018.csv")) |> 
+  clean_names()
+
+locations_BA_2019 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2019.csv")) |> 
+  clean_names()
+
+locations_BA_2020 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2020.csv")) |> 
+  clean_names()
+
+BA_locations <- bind_rows(locations_BA_2016, locations_BA_2017, locations_BA_2018, locations_BA_2019, locations_BA_2020)
+```
+
+```{r BA locations master list, include=FALSE}
+# the GPS coordinates are in an incomplete (missing negative sign in longitudes) degrees and decimal minutes (DD:MM.MM) format
+# provided as character strings
+# converting the provided latitudes and longitudes to the decimal degrees (DD.DD) format with the parzer package
+# note that the coordinates for Sambo Point refer to a location on land which seems to be an error
+# no fish sampled or collected at Sambo Point so leaving it in without correction
+
+BA_locations <- BA_locations |>
+  mutate(
+    lat_decimal_degrees = parse_lat(latitude),
+    long_decimal_degrees = parse_lon(paste(longitude, "W"))
+  ) 
+
+# re-conciliating similar names and different GPS coordinates collected at the same location
+BA_locations |>
+  mutate(site_number = as_factor(site_number),
+         site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
+         site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
+         site_name = replace(site_name, site_name == "Mount Frederick", "Mount Frederick Bay"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Wicklow Bay", "Wicklow Point")
+         ) |>
+  distinct()
+
+# re-conciliating GPS coordinates collected at the same location 
+BA_clean_locations <- BA_locations |>
+  filter(
+    (site_name == "Alder Bay" & site_number == "I") |
+    (site_name == "Arthur Point" & site_number == "21") |
+    (site_name == "Baker Island" & site_number == "19") |
+    (site_name == "Batt Bluff West") |
+    (site_name == "Bennett Point Fish Farm (Noo-La)") |
+    (site_name == "Brent Bay" & site_number == "6") |
+    (site_name == "Chop Bay" & site_number == "3") |
+    (site_name == "Codrington Point" & site_number == "G") |
+    (site_name == "Denham Island" & site_number == "18") |
+    (site_name == "Doctor Island Fish Farm" & site_number == "5") |
+    (site_name == "Freshwater Bay") |
+    (site_name == "Glacier Falls Fish Farm" & site_number == "16") |
+    (site_name == "Gwayasdums 1") |
+    (site_name == "Hanson Island")
+  ) |>
+  select(site_number, site_name, lat_decimal_degrees, long_decimal_degrees)
+```
