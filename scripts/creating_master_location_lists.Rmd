@@ -60,32 +60,46 @@ locations_BA_2020 <- read_csv(here("data/interim/broughton_archipelago/all_broug
 BA_locations <- bind_rows(locations_BA_2016, locations_BA_2017, locations_BA_2018, locations_BA_2019, locations_BA_2020)
 ```
 
-```{r BA locations master list, include=FALSE}
+```{r BA locations master list lat long, include=FALSE}
 # the GPS coordinates are in an incomplete (missing negative sign in longitudes) degrees and decimal minutes (DD:MM.MM) format
 # provided as character strings
 # converting the provided latitudes and longitudes to the decimal degrees (DD.DD) format with the parzer package
-# note that the coordinates for Sambo Point refer to a location on land which seems to be an error
-# no fish sampled or collected at Sambo Point so leaving it in without correction
-
 BA_locations <- BA_locations |>
   mutate(
     lat_decimal_degrees = parse_lat(latitude),
     long_decimal_degrees = parse_lon(paste(longitude, "W"))
-  ) 
+  )
+```
 
+```{r BA locations master list names, include=FALSE}
 # re-conciliating similar names and different GPS coordinates collected at the same location
-BA_locations |>
+# note that the coordinates for Sambo Point refer to a location on land which seems to be an error
+# no fish sampled or collected at Sambo Point so leaving it in without correction
+# GPS location of Wakeman 5 in 2019 is not on the map which only locates Wakeman 3 and 4
+# Wakeman 5 was assumed to be the same as Wakeman 3
+BA_locations <- BA_locations |>
   mutate(site_number = as_factor(site_number),
          site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
          site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
+         site_name = replace(site_name, site_name == "Humphrey Rock Fish Farm", "Humphrey Rock"),
+         site_name = replace(site_name, site_name == "Kwatsi Bay", "Kwatsi Point"),         
          site_name = replace(site_name, site_name == "Mount Frederick", "Mount Frederick Bay"),
          site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
          site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Wakeman 5", "Wakeman 3"),
          site_name = replace(site_name, site_name == "Wicklow Bay", "Wicklow Point")
          ) |>
   distinct()
+```
 
+```{r BA locations master list unique records, include=FALSE}
+# new locations added in 2019 and 2020 reports
 # re-conciliating GPS coordinates collected at the same location 
+# error in Hoeya South GPS coordinates in 2019 report - using GPS coordinates from 2020 report
+# helpful website to locate several sites: https://www.mapcustomizer.com/
+# GPS coordinates for Millar Point were approximately 500m apart - assumed to be the same location
+
+
 BA_clean_locations <- BA_locations |>
   filter(
     (site_name == "Alder Bay" & site_number == "I") |
@@ -101,7 +115,41 @@ BA_clean_locations <- BA_locations |>
     (site_name == "Freshwater Bay") |
     (site_name == "Glacier Falls Fish Farm" & site_number == "16") |
     (site_name == "Gwayasdums 1") |
-    (site_name == "Hanson Island")
-  ) |>
+    (site_name == "Hanson Island") |
+    (site_name == "Harry Bay" & site_number == "D") |
+    (site_name == "Hoeya Sound") | 
+    (site_name == "Hoeya South" & long_decimal_degrees == "-125.9812") |
+    (site_name == "Humphrey Rock" & site_number == "10") |
+    (site_name == "Jumper Island" & site_number == "20") |
+    (site_name == "Kokish Estuary") |
+    (site_name == "Kwatsi Point" & site_number == "15") |
+    (site_name == "Lady Island" & site_number == "4") |
+    (site_name == "Lance Bay" & site_number == "8") |
+    (site_name == "Larsen Island Fish Farm") |
+    (site_name == "London Point" & site_number == "13") |
+    (site_name == "Matsiu Bay") |
+    (site_name == "McKenzie Cove") |
+    (site_name == "Midsummer Island Fish Farm (Potts Bay)" & site_number == "2") |
+    (site_name == "Miller Point" & site_number == "14") |
+    (site_name == "Mount Frederick Bay") |
+    (site_name == "Nimpkish Estuary") |
+    (site_name == "Oline Point" & site_number == "12") |
+    (site_name == "Penphrase Passage" & site_number == "C") |
+    (site_name == "Phillip Point West" & site_number == "E") |
+    (site_name == "Poppelwell Point" & site_number == "J") |
+    (site_name == "Pumish Point" & site_number == "11") |
+    (site_name == "Sambo Point") |
+    (site_name == "Sargeaunt Pass Fish Farm" & site_number == "9") |
+    (site_name == "Shelterless Bay" & site_number == "7") |
+    (site_name == "Sutlej North" & site_number == "F") |
+    (site_name == "Swanson Island Fish Farm" & site_number == "1") |
+    (site_name == "Tomakstum Island") |
+    (site_name == "Viner Sound" & site_number == "17") |
+    (site_name == "Wakeman" & site_number == "") |
+    (site_name == "Wakeman 3" & long_decimal_degrees == "-126.5154") |
+    (site_name == "Wakeman 4" & long_decimal_degrees == "-126.4886") |
+    (site_name == "Wehlis Bay Fish Farm" & site_number == "H") |
+    (site_name == "Wicklow Point" & site_number == "22")
+      ) |>
   select(site_number, site_name, lat_decimal_degrees, long_decimal_degrees)
 ```
