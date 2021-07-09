@@ -37,7 +37,7 @@ There are three main regions:
 ## Broughton Archipelago
 
 ```{r BA data, include=FALSE}
-BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) %>% 
+BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
   clean_names()
 ```
 
@@ -116,7 +116,7 @@ BA_clean_locations <- BA_locations |>
     (site_name == "Hanson Island") |
     (site_name == "Harry Bay" & site_number == "D") |
     (site_name == "Hoeya Sound") | 
-    (site_name == "Hoeya South" & long_decimal_degrees == "-125.9812") |
+    (site_name == "Hoeya South" & longitude == "125 58.870") |
     (site_name == "Humphrey Rock" & site_number == "10") |
     (site_name == "Jumper Island" & site_number == "20") |
     (site_name == "Kokish Estuary") |
@@ -144,8 +144,8 @@ BA_clean_locations <- BA_locations |>
     (site_name == "Tomakstum Island") |
     (site_name == "Viner Sound" & site_number == "17") |
     (site_name == "Wakeman" & site_number == "") |
-    (site_name == "Wakeman 3" & long_decimal_degrees == "-126.5154") |
-    (site_name == "Wakeman 4" & long_decimal_degrees == "-126.4886") |
+    (site_name == "Wakeman 3" & longitude == "126 30.926") |
+    (site_name == "Wakeman 4" & longitude == "126 29.316") |
     (site_name == "Wehlis Bay Fish Farm" & site_number == "H") |
     (site_name == "Wicklow Point" & site_number == "22")
       ) |>
@@ -170,7 +170,10 @@ BA_clean_locations <- BA_clean_locations |>
     site_number = if_else(site_name == "McKenzie Cove", "1009", site_number),
     site_number = if_else(site_name == "Mount Frederick Bay", "1010", site_number),
     site_number = if_else(site_name == "Nimpkish Estuary", "1011", site_number),
-    site_number = if_else(site_name == "Tomakstum Island", "1012", site_number)
+    site_number = if_else(site_name == "Tomakstum Island", "1012", site_number),
+    site_number = if_else(site_name == "Hoeya South", "1013", site_number),
+    site_number = if_else(site_name == "Wakeman 3", "1014", site_number),
+    site_number = if_else(site_name == "Wakeman 4", "1015", site_number)
     ) 
 ```
 
