@@ -78,8 +78,7 @@ BA_locations <- BA_locations |>
 # GPS location of Wakeman 5 in 2019 is not on the map which only locates Wakeman 3 and 4
 # Wakeman 5 was assumed to be the same as Wakeman 3
 BA_locations <- BA_locations |>
-  mutate(site_number = as_factor(site_number),
-         site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
+  mutate(site_name = replace(site_name, site_name == "Alder Point", "Alder Bay"),
          site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
          site_name = replace(site_name, site_name == "Humphrey Rock Fish Farm", "Humphrey Rock"),
          site_name = replace(site_name, site_name == "Kwatsi Bay", "Kwatsi Point"),         
@@ -98,7 +97,6 @@ BA_locations <- BA_locations |>
 # error in Hoeya South GPS coordinates in 2019 report - using GPS coordinates from 2020 report
 # helpful website to locate several sites: https://www.mapcustomizer.com/
 # GPS coordinates for Millar Point were approximately 500m apart - assumed to be the same location
-
 
 BA_clean_locations <- BA_locations |>
   filter(
@@ -152,4 +150,34 @@ BA_clean_locations <- BA_locations |>
     (site_name == "Wicklow Point" & site_number == "22")
       ) |>
   select(site_number, site_name, lat_decimal_degrees, long_decimal_degrees)
+```
+
+```{r BA locations master list numbers, include=FALSE}
+# 12 sites do not have site numbers
+# adding them for completeness
+# starting from 1000 for the sites in BA
+BA_clean_locations <- BA_clean_locations |>
+  mutate(
+    site_number = if_else(site_name == "Batt Bluff West", "1000", site_number),
+    site_number = if_else(site_name == "Freshwater Bay", "1001", site_number),
+    site_number = if_else(site_name == "Gwayasdums 1", "1002", site_number),
+    site_number = if_else(site_name == "Hanson Island", "1003", site_number),
+    site_number = if_else(site_name == "Hoeya Sound", "1004", site_number),
+    site_number = if_else(site_name == "Kokish Estuary", "1005", site_number),
+    site_number = if_else(site_name == "Larsen Island Fish Farm", "1006", site_number),
+    site_number = if_else(site_name == "Matsiu Bay", "1007", site_number),
+    site_number = if_else(site_name == "Hanson Island", "1008", site_number),
+    site_number = if_else(site_name == "McKenzie Cove", "1009", site_number),
+    site_number = if_else(site_name == "Mount Frederick Bay", "1010", site_number),
+    site_number = if_else(site_name == "Nimpkish Estuary", "1011", site_number),
+    site_number = if_else(site_name == "Tomakstum Island", "1012", site_number)
+    ) 
+```
+
+```{r BA locations master finale, include=FALSE}
+BA_sites <- BA_clean_locations |>
+  mutate(
+    site_number = as_factor(site_number),
+    area = "Broughton Archipelago"
+  )
 ```
