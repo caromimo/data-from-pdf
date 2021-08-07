@@ -178,9 +178,13 @@ BA_clean_locations <- BA_clean_locations |>
 ```
 
 ```{r BA locations master finale, include=FALSE}
-BA_sites <- BA_clean_locations |>
+BAA_sites <- BA_clean_locations |>
   mutate(
     site_number = as_factor(site_number),
     area = "Broughton Archipelago"
   )
+```
+
+```{r save BA locations master finale, include=FALSE}
+write_csv(BAA_sites, here("data/interim/broughton_archipelago/BAA_sites.csv"))
 ```
