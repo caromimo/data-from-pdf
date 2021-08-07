@@ -1,5 +1,5 @@
 ---
-title: "Creation of master sampling location lists"
+title: "Creation of sampling location master lists"
 author: "C. Mimeault"
 date: "June 13, 2021"
 output: pdf_document
