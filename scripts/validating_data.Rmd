@@ -670,11 +670,21 @@ None of the discrepancies were due to errors in the extracted data. I therefore 
 
 # Standardization of datasets
 
-All datasets within a given region were standardized. All unique sites and their locations were extracted and cleaned using a separate script. This was done for each region. The script can be found in the github repo (creating_master_location_lists.Rmd).
+All datasets within a given region were standardized. Each report includes a table with all unique sites and their locations. These data were extracted and cleaned using a separate script (also saved in the Guthub repo: creating_master_location_lists.Rmd). This was done for all three regions:
+
+* I cleaned-up GPS coordinates as they were incomplete (some were missing negative sign in longitudes) degrees and decimal minutes (DD:MM.MM) format and were provided as character strings - I converted the latitudes and longitudes to the decimal degrees (DD.DD) format with the parzer package
+
+* I reconciled similar name sites, for example, Alder Point and Alder Bay, or Mount Frederick and Mount Frederic Bay, etc
+
+* I reconciled the sampling done at the same location but not at the exact GPS coordinates, for example sometimes between years, the sampling location may vary 50 to 100m: those were considered the same
+
+* I added site numbers to locations that did not have any
+
+* I saved the list as the master locations for this area.
 
 ## Locations in the Broughton Archipelago area
 
-A total of ...
+Between 2016 and 2020, before clean-up, there were 81 locations. However, after clean-up as described above, there were a total of 47 unique sampling locations.
 
 ## Locations in the Discovery Islands area
 
