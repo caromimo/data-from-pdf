@@ -161,14 +161,13 @@ BA_clean_locations <- BA_clean_locations |>
     site_number = if_else(site_name == "Kokish Estuary", "1005", site_number),
     site_number = if_else(site_name == "Larsen Island Fish Farm", "1006", site_number),
     site_number = if_else(site_name == "Matsiu Bay", "1007", site_number),
-    site_number = if_else(site_name == "Hanson Island", "1008", site_number),
-    site_number = if_else(site_name == "McKenzie Cove", "1009", site_number),
-    site_number = if_else(site_name == "Mount Frederick Bay", "1010", site_number),
-    site_number = if_else(site_name == "Nimpkish Estuary", "1011", site_number),
-    site_number = if_else(site_name == "Tomakstum Island", "1012", site_number),
-    site_number = if_else(site_name == "Hoeya South", "1013", site_number),
-    site_number = if_else(site_name == "Wakeman 3", "1014", site_number),
-    site_number = if_else(site_name == "Wakeman 4", "1015", site_number)
+    site_number = if_else(site_name == "McKenzie Cove", "1008", site_number),
+    site_number = if_else(site_name == "Mount Frederick Bay", "1009", site_number),
+    site_number = if_else(site_name == "Nimpkish Estuary", "1010", site_number),
+    site_number = if_else(site_name == "Tomakstum Island", "1011", site_number),
+    site_number = if_else(site_name == "Hoeya South", "1012", site_number),
+    site_number = if_else(site_name == "Wakeman 3", "1013", site_number),
+    site_number = if_else(site_name == "Wakeman 4", "1014", site_number)
     ) 
 ```
 
@@ -184,10 +183,10 @@ BAA_sites <- BA_clean_locations |>
 write_csv(BAA_sites, here("data/interim/broughton_archipelago/BAA_sites.csv"))
 ```
 
-## Cleaning site numbers and names in dataset
+## Standardization of site numbers and names in dataset
 
 ```{r BA data, include=FALSE}
-# read file and correct site names according to the masterlist
+# read file and correct site names according to the master list
 BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
   clean_names() |>
   mutate(site_name = replace(site_name, site_name == "Denham Is", "Denham Island"),
@@ -212,7 +211,7 @@ BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipela
 ```
 
 ```{r BA data include all site names, include=FALSE}
-# replace the "Site 01" with "1" in the site number column
+# cleaning up the site numbers according to the master list, for example replace the "Site 01" with "1"
 BA_data <- BA_data |>
   mutate(site_number = replace(site_number, site_number == "Site 1", "1"),
          site_number = replace(site_number, site_number == "Site 2", "2"),
@@ -253,3 +252,112 @@ BA_data <- BA_data |>
          site_number = replace(site_number, site_number == "Site J", "J")
          )
 ```
+
+```{r}
+aaa <- BA_data |>
+  mutate(
+    site_name =  if_else(site_number == "1", "Swanson Island Fish Farm", site_name),
+    site_name =  if_else(site_number == "2", "Midsummer Island Fish Farm (Potts Bay)", site_name),
+    site_name =  if_else(site_number == "3", "Chop Bay", site_name),
+    site_name =  if_else(site_number == "4", "Lady Island", site_name),
+    site_name =  if_else(site_number == "5", "Doctor Island Fish Farm", site_name),
+    site_name =  if_else(site_number == "6", "Brent Bay", site_name),
+    site_name =  if_else(site_number == "7", "Shelterless Bay", site_name),
+    site_name =  if_else(site_number == "8", "Lance Bay", site_name),
+    site_name =  if_else(site_number == "9", "Sargeaunt Pass Fish Farm", site_name),
+    site_name =  if_else(site_number == "10", "Humphrey Rock", site_name),
+    site_name =  if_else(site_number == "11", "Pumish Point", site_name),
+    site_name =  if_else(site_number == "12", "Oline Point", site_name),
+    site_name =  if_else(site_number == "13", "London Point", site_name),
+    site_name =  if_else(site_number == "14", "Miller Point", site_name),
+    site_name =  if_else(site_number == "15", "Kwatsi Point", site_name),
+    site_name =  if_else(site_number == "16", "Glacier Falls Fish Farm", site_name),
+    site_name =  if_else(site_number == "17", "Viner Sound", site_name),
+    site_name =  if_else(site_number == "18", "Denham Island", site_name),
+    site_name =  if_else(site_number == "19", "Baker Island", site_name),
+    site_name =  if_else(site_number == "20", "Jumper Island", site_name),
+    site_name =  if_else(site_number == "21", "Arthur Point", site_name),
+    site_name =  if_else(site_number == "22", "Wicklow Point", site_name),
+    site_name =  if_else(site_number == "A", "Bennett Point Fish Farm (Noo-La)", site_name),
+    site_name =  if_else(site_number == "B", "Sambo Point", site_name),
+    site_name =  if_else(site_number == "C", "Penphrase Passage", site_name),
+    site_name =  if_else(site_number == "D", "Harry Bay", site_name),
+    site_name =  if_else(site_number == "E", "Phillip Point West", site_name),
+    site_name =  if_else(site_number == "F", "Sutlej North", site_name),
+    site_name =  if_else(site_number == "G", "Codrington Point", site_name),
+    site_name =  if_else(site_number == "H", "Wehlis Bay Fish Farm", site_name),
+    site_name =  if_else(site_number == "I", "Alder Bay", site_name),
+    site_name =  if_else(site_number == "J", "Poppelwell Point", site_name),
+    site_name =  if_else(site_number == "1000", "Batt Bluff West", site_name),
+    site_name =  if_else(site_number == "1001", "Freshwater Bay", site_name),
+    site_name =  if_else(site_number == "1002", "Gwayasdums 1", site_name),
+    site_name =  if_else(site_number == "1003", "Hanson Island", site_name),
+    site_name =  if_else(site_number == "1004", "Hoeya Sound", site_name),
+    site_name =  if_else(site_number == "1005", "Kokish Estuary", site_name),
+    site_name =  if_else(site_number == "1006", "Larsen Island Fish Farm", site_name),
+    site_name =  if_else(site_number == "1007", "Matsiu Bay", site_name),
+    site_name =  if_else(site_number == "1008", "McKenzie Cove", site_name),
+    site_name =  if_else(site_number == "1009", "Mount Frederick Bay", site_name),
+    site_name =  if_else(site_number == "1010", "Nimpkish Estuary", site_name),    
+    site_name =  if_else(site_number == "1011", "Tomakstum Island", site_name),    
+    site_name =  if_else(site_number == "1012", "Hoeya South", site_name),    
+    site_name =  if_else(site_number == "1013", "Wakeman 3", site_name),
+    site_name =  if_else(site_number == "1014", "Wakeman 4", site_name)
+  )
+```
+
+
+```{r, BA data complete missing site numbers based on site names, include=FALSE}
+test <- BA_data |>
+  mutate(
+    site_number =  if_else(site_name == "Alder Bay", "I", site_number),
+    site_number =  if_else(site_name == "Arthur Point", "21", site_number),
+    site_number = if_else(site_name == "Baker Island", "19", site_number),
+    site_number =  if_else(site_name == "Batt Bluff West", "1000", site_number),
+    site_number =  if_else(site_name == "Bennett Point Fish Farm (Noo-La)", "A", site_number),
+    site_number = if_else(site_name == "Brent Bay", "6", site_number),
+    site_number =  if_else(site_name == "Chop Bay", "3", site_number),
+    site_number =  if_else(site_name == "Codrington Point", "G", site_number),
+    site_number = if_else(site_name == "Denham Island", "18", site_number),
+    site_number =  if_else(site_name == "Doctor Island Fish Farm", "5", site_number),
+    site_number =  if_else(site_name == "Freshwater Bay", "1001", site_number),
+    site_number = if_else(site_name == "Glacier Falls Fish Farm", "16", site_number),
+    site_number =  if_else(site_name == "Gwayasdums 1", "1002", site_number),
+    site_number =  if_else(site_name == "Hanson Island", "1008", site_number),
+    site_number = if_else(site_name == "Harry Bay", "D", site_number),
+    site_number =  if_else(site_name == "Hoeya Sound", "1004", site_number),
+    site_number =  if_else(site_name == "Hoeya South", "1013", site_number),
+    site_number = if_else(site_name == "Humphrey Rock", "10", site_number),
+    site_number =  if_else(site_name == "Kokish Estuary", "1005", site_number),
+    site_number =  if_else(site_name == "Kwatsi Point", "15", site_number),
+    site_number = if_else(site_name == "Lady Island", "4", site_number),
+    site_number =  if_else(site_name == "Lance Bay", "8", site_number),
+    site_number =  if_else(site_name == "Larsen Island Fish Farm", "1006", site_number),
+    site_number = if_else(site_name == "London Point", "13", site_number),
+    site_number =  if_else(site_name == "Matsiu Bay", "1007", site_number),
+    site_number =  if_else(site_name == "McKenzie Cove", "1009", site_number),
+    site_number = if_else(site_name == "Midsummer Island Fish Farm (Potts Bay)", "2", site_number),
+    site_number =  if_else(site_name == "Miller Point", "14", site_number),
+    site_number =  if_else(site_name == "Mount Frederick Bay", "1010", site_number),
+    site_number = if_else(site_name == "Nimpkish Estuary", "1011", site_number),
+    site_number =  if_else(site_name == "Oline Point", "12", site_number),
+    site_number =  if_else(site_name == "Penphrase Passage", "C", site_number),
+    site_number = if_else(site_name == "Phillip Point West", "E", site_number),
+    site_number =  if_else(site_name == "Poppelwell Point", "J", site_number),
+    site_number =  if_else(site_name == "Pumish Point", "11", site_number),
+    site_number = if_else(site_name == "Sambo Point", "B", site_number),
+    site_number =  if_else(site_name == "Sargeaunt Pass Fish Farm", "9", site_number),
+    site_number =  if_else(site_name == "Shelterless Bay", "7", site_number),
+    site_number = if_else(site_name == "Sutlej North", "F", site_number),
+    site_number =  if_else(site_name == "Swanson Island Fish Farm", "1", site_number),
+    site_number =  if_else(site_name == "Tomakstum Island", "1012", site_number),
+    site_number = if_else(site_name == "Viner Sound", "17", site_number),
+    site_number =  if_else(site_name == "Wakeman 3", "1014", site_number),
+    site_number =  if_else(site_name == "Wakeman 4", "1015", site_number),
+    site_number = if_else(site_name == "Wehlis Bay Fish Farm", "H", site_number),
+    site_number =  if_else(site_name == "Wicklow Point", "22", site_number)
+  )
+```
+
+https://stackoverflow.com/questions/17013227/select-only-rows-if-its-value-in-a-particular-column-is-na-in-r
+
