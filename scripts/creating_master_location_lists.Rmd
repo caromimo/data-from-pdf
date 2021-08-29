@@ -32,80 +32,9 @@ There are three main regions:
 * Discovery Islands
 * Quatsino
 
-# Standardization of sampling locations
+# Broughton Archipelago
 
-## Broughton Archipelago
-
-```{r BA data, include=FALSE}
-# read file and correct site names according to the masterlist
-BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
-  clean_names() |>
-  mutate(site_name = replace(site_name, site_name == "Denham Is", "Denham Island"),
-         site_name = replace(site_name, site_name == "Doctor Island Fish \nFarm", "Doctor Island Fish Farm"),
-         site_name = replace(site_name, site_name == "Doctor Island FF", "Doctor Island Fish Farm"),
-         site_name = replace(site_name, site_name == "Glacier Falls FF", "Glacier Falls Fish Farm"),
-         site_name = replace(site_name, site_name == "Glacier Falls Fish \nFarm", "Glacier Falls Fish Farm"),
-         site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
-         site_name = replace(site_name, site_name == "Humphrey Rock \nFish Farm", "Humphrey Rock"),
-         site_name = replace(site_name, site_name == "Kwatsi Bay", "Kwatsi Point"),
-         site_name = replace(site_name, site_name == "Matsui Bay", "Matsiu Bay"),   
-         site_name = replace(site_name, site_name == "Midsummer Island Fish \nFarm", "Midsummer Island Fish Farm (Potts Bay)"), 
-         site_name = replace(site_name, site_name == "Midsummer Island \nFish Farm", "Midsummer Island Fish Farm (Potts Bay)"),  
-         site_name = replace(site_name, site_name == "Penphase Pass", "Penphrase Passage"),
-         site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
-         site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
-         site_name = replace(site_name, site_name == "Sargeaunt Pass \nFish Farm", "Sargeaunt Pass Fish Farm"),
-         site_name = replace(site_name, site_name == "Wakeman 5", "Wakeman 3"),
-         site_name = replace(site_name, site_name == "Wehlis Bay FF", "Wehlis Bay Fish Farm"),
-         site_name = replace(site_name, site_name == "Wehlis Bay Fish \nFarm", "Wehlis Bay Fish Farm")
-         )
-```
-
-```{r BA data include all site names, include=FALSE}
-# replace the "Site 01" with "1" in the site number column
-
-BA_data <- BA_data |>
-  mutate(site_number = replace(site_number, site_number == "Site 1", "1"),
-         site_number = replace(site_number, site_number == "Site 2", "2"),
-         site_number = replace(site_number, site_number == "Site 3", "3"),
-         site_number = replace(site_number, site_number == "Site 4", "4"),
-         site_number = replace(site_number, site_number == "Site 04", "4"),
-         site_number = replace(site_number, site_number == "Site 5", "5"),
-         site_number = replace(site_number, site_number == "Site 05", "5"),
-         site_number = replace(site_number, site_number == "Site 06", "6"),
-         site_number = replace(site_number, site_number == "Site 7", "7"),
-         site_number = replace(site_number, site_number == "Site 07", "7"),
-         site_number = replace(site_number, site_number == "Site 8", "8"),
-         site_number = replace(site_number, site_number == "Site 08", "8"),
-         site_number = replace(site_number, site_number == "Site 9", "9"),
-         site_number = replace(site_number, site_number == "Site 09", "9"),
-         site_number = replace(site_number, site_number == "Site 10", "10"),
-         site_number = replace(site_number, site_number == "Site 11", "11"),
-         site_number = replace(site_number, site_number == "Site 12", "12"),
-         site_number = replace(site_number, site_number == "Site 13", "13"),
-         site_number = replace(site_number, site_number == "Site 14", "14"),
-         site_number = replace(site_number, site_number == "Site 15", "15"),
-         site_number = replace(site_number, site_number == "Site 16", "16"),
-         site_number = replace(site_number, site_number == "Site 17", "17"),
-         site_number = replace(site_number, site_number == "Site 18", "18"),
-         site_number = replace(site_number, site_number == "Site 19", "19"),
-         site_number = replace(site_number, site_number == "Site 20", "20"),
-         site_number = replace(site_number, site_number == "Site 21", "21"),
-         site_number = replace(site_number, site_number == "Site 22", "22"),
-         site_number = replace(site_number, site_number == "Site A", "A"),
-         site_number = replace(site_number, site_number == "Site B", "B"),
-         site_number = replace(site_number, site_number == "Site C", "C"),
-         site_number = replace(site_number, site_number == "Site D", "D"),
-         site_number = replace(site_number, site_number == "Site E", "E"),
-         site_number = replace(site_number, site_number == "Site F", "F"),
-         site_number = replace(site_number, site_number == "Site G", "G"),
-         site_number = replace(site_number, site_number == "Site H", "H"),
-         site_number = replace(site_number, site_number == "Site I", "I"),
-         site_number = replace(site_number, site_number == "Site J", "J")
-         )
-```
-
-```
+## Standardization of sampling locations
 
 ```{r BA locations, include=FALSE}
 locations_BA_2016 <- read_csv(here("data/interim/broughton_archipelago/all_broughton_archipelago_locations_2016.csv")) |> 
@@ -253,4 +182,74 @@ BAA_sites <- BA_clean_locations |>
 
 ```{r save BA locations master finale, include=FALSE}
 write_csv(BAA_sites, here("data/interim/broughton_archipelago/BAA_sites.csv"))
+```
+
+## Cleaning site numbers and names in dataset
+
+```{r BA data, include=FALSE}
+# read file and correct site names according to the masterlist
+BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
+  clean_names() |>
+  mutate(site_name = replace(site_name, site_name == "Denham Is", "Denham Island"),
+         site_name = replace(site_name, site_name == "Doctor Island Fish \nFarm", "Doctor Island Fish Farm"),
+         site_name = replace(site_name, site_name == "Doctor Island FF", "Doctor Island Fish Farm"),
+         site_name = replace(site_name, site_name == "Glacier Falls FF", "Glacier Falls Fish Farm"),
+         site_name = replace(site_name, site_name == "Glacier Falls Fish \nFarm", "Glacier Falls Fish Farm"),
+         site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
+         site_name = replace(site_name, site_name == "Humphrey Rock \nFish Farm", "Humphrey Rock"),
+         site_name = replace(site_name, site_name == "Kwatsi Bay", "Kwatsi Point"),
+         site_name = replace(site_name, site_name == "Matsui Bay", "Matsiu Bay"),   
+         site_name = replace(site_name, site_name == "Midsummer Island Fish \nFarm", "Midsummer Island Fish Farm (Potts Bay)"), 
+         site_name = replace(site_name, site_name == "Midsummer Island \nFish Farm", "Midsummer Island Fish Farm (Potts Bay)"),  
+         site_name = replace(site_name, site_name == "Penphase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass \nFish Farm", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Wakeman 5", "Wakeman 3"),
+         site_name = replace(site_name, site_name == "Wehlis Bay FF", "Wehlis Bay Fish Farm"),
+         site_name = replace(site_name, site_name == "Wehlis Bay Fish \nFarm", "Wehlis Bay Fish Farm")
+         )
+```
+
+```{r BA data include all site names, include=FALSE}
+# replace the "Site 01" with "1" in the site number column
+BA_data <- BA_data |>
+  mutate(site_number = replace(site_number, site_number == "Site 1", "1"),
+         site_number = replace(site_number, site_number == "Site 2", "2"),
+         site_number = replace(site_number, site_number == "Site 3", "3"),
+         site_number = replace(site_number, site_number == "Site 4", "4"),
+         site_number = replace(site_number, site_number == "Site 04", "4"),
+         site_number = replace(site_number, site_number == "Site 5", "5"),
+         site_number = replace(site_number, site_number == "Site 05", "5"),
+         site_number = replace(site_number, site_number == "Site 06", "6"),
+         site_number = replace(site_number, site_number == "Site 7", "7"),
+         site_number = replace(site_number, site_number == "Site 07", "7"),
+         site_number = replace(site_number, site_number == "Site 8", "8"),
+         site_number = replace(site_number, site_number == "Site 08", "8"),
+         site_number = replace(site_number, site_number == "Site 9", "9"),
+         site_number = replace(site_number, site_number == "Site 09", "9"),
+         site_number = replace(site_number, site_number == "Site 10", "10"),
+         site_number = replace(site_number, site_number == "Site 11", "11"),
+         site_number = replace(site_number, site_number == "Site 12", "12"),
+         site_number = replace(site_number, site_number == "Site 13", "13"),
+         site_number = replace(site_number, site_number == "Site 14", "14"),
+         site_number = replace(site_number, site_number == "Site 15", "15"),
+         site_number = replace(site_number, site_number == "Site 16", "16"),
+         site_number = replace(site_number, site_number == "Site 17", "17"),
+         site_number = replace(site_number, site_number == "Site 18", "18"),
+         site_number = replace(site_number, site_number == "Site 19", "19"),
+         site_number = replace(site_number, site_number == "Site 20", "20"),
+         site_number = replace(site_number, site_number == "Site 21", "21"),
+         site_number = replace(site_number, site_number == "Site 22", "22"),
+         site_number = replace(site_number, site_number == "Site A", "A"),
+         site_number = replace(site_number, site_number == "Site B", "B"),
+         site_number = replace(site_number, site_number == "Site C", "C"),
+         site_number = replace(site_number, site_number == "Site D", "D"),
+         site_number = replace(site_number, site_number == "Site E", "E"),
+         site_number = replace(site_number, site_number == "Site F", "F"),
+         site_number = replace(site_number, site_number == "Site G", "G"),
+         site_number = replace(site_number, site_number == "Site H", "H"),
+         site_number = replace(site_number, site_number == "Site I", "I"),
+         site_number = replace(site_number, site_number == "Site J", "J")
+         )
 ```
