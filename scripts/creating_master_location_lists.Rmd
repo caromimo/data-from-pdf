@@ -38,7 +38,26 @@ There are three main regions:
 
 ```{r BA data, include=FALSE}
 BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
-  clean_names()
+  clean_names() |>
+  mutate(site_name = replace(site_name, site_name == "Denham Is", "Denham Island"),
+         site_name = replace(site_name, site_name == "Doctor Island Fish \nFarm", "Doctor Island Fish Farm"),
+         site_name = replace(site_name, site_name == "Doctor Island FF", "Doctor Island Fish Farm"),
+         site_name = replace(site_name, site_name == "Glacier Falls FF", "Glacier Falls Fish Farm"),
+         site_name = replace(site_name, site_name == "Glacier Falls Fish \nFarm", "Glacier Falls Fish Farm"),
+         site_name = replace(site_name, site_name == "Hanson", "Hanson Island"),
+         site_name = replace(site_name, site_name == "Humphrey Rock \nFish Farm", "Humphrey Rock"),
+         site_name = replace(site_name, site_name == "Kwatsi Bay", "Kwatsi Point"),
+         site_name = replace(site_name, site_name == "Matsui Bay", "Matsiu Bay"),   
+         site_name = replace(site_name, site_name == "Midsummer Island Fish \nFarm", "Midsummer Island Fish Farm (Potts Bay)"), 
+         site_name = replace(site_name, site_name == "Midsummer Island \nFish Farm", "Midsummer Island Fish Farm (Potts Bay)"),  
+         site_name = replace(site_name, site_name == "Penphase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Penphrase Pass", "Penphrase Passage"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Sargeaunt Pass \nFish Farm", "Sargeaunt Pass Fish Farm"),
+         site_name = replace(site_name, site_name == "Wakeman 5", "Wakeman 3"),
+         site_name = replace(site_name, site_name == "Wehlis Bay FF", "Wehlis Bay Fish Farm"),
+         site_name = replace(site_name, site_name == "Wehlis Bay Fish \nFarm", "Wehlis Bay Fish Farm")
+         )
 ```
 
 ```{r BA locations, include=FALSE}
