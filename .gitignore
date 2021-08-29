@@ -6,6 +6,6 @@ data
 scripts/extract_with_pdf_tools.R
 scripts/archives/*
 tables/*
-*.pdf
-**/*.pdf
 *.swp
+scripts/*.pdf
+**/*.pdf
