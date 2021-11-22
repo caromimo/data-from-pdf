@@ -2,6 +2,8 @@ FROM alpine:3.14
 
 WORKDIR /app
 
+ENV _R_USE_PIPEBIND_ true
+
 # Create a group and user
 RUN addgroup -S shiny && adduser -S shiny -G shiny
 
