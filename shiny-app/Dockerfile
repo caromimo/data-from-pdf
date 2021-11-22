@@ -14,6 +14,7 @@ RUN apk add -U --no-cache R R-dev \
     bash \
     m4 \
     file \
+    fontconfig \
     curl-dev \
     python2 \
     g++ \
@@ -28,9 +29,13 @@ RUN apk add -U --no-cache R R-dev \
     libxt-dev \
     libxml2-dev \
     linux-headers \
+    msttcorefonts-installer \
     wget
 
+RUN update-ms-fonts
+
 # copy necessary files
+
 ## app folder
 COPY app.R .
 ## renv.lock file
