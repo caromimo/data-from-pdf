@@ -253,15 +253,19 @@ https://stackoverflow.com/questions/17013227/select-only-rows-if-its-value-in-a-
 
 ```{r}
 BA_data %>%
+  select(year, month, fish_species, lep_total, cal_total) %>%
+  filter(fish_species == "chinook salmon") %>%
   group_by(year) %>%
-  ggplot(
-    aes(
-      x = year, 
-      y = lep_total
-    )) + 
-  geom_col() +
-  xlim(2015,2021) +
-  theme_minimal() 
+  ggplot(aes(x = year,
+             y = lep_total)) +
+  geom_col(width = 0.5) +
+  xlim(2015, 2021) +
+  ylim(0, 120) +
+  labs(x = "Sampling year in the Broughton Archipelago in BC",
+       y = expression("Total number of L. salmonis on fish")) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 ```
 
 
