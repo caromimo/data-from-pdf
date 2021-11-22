@@ -30,6 +30,10 @@ This document complements the document in which data extracted from juvenile wil
 
 ```{r BA data, include=FALSE}
 # read file and correct site names according to the master list
+
+raw_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
+  clean_names() 
+
 BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipelago_all_data.csv")) |>
   clean_names() |>
   mutate(site_name = replace(site_name, site_name == "Denham Is", "Denham Island"),
@@ -55,6 +59,7 @@ BA_data <- read_csv(here("data/interim/broughton_archipelago/broughton_archipela
 
 ```{r BA data include all site names, include=FALSE}
 # cleaning up the site numbers according to the master list, for example replace the "Site 01" with "1"
+
 BA_data <- BA_data |>
   mutate(site_number = replace(site_number, site_number == "Site 1", "1"),
          site_number = replace(site_number, site_number == "Site 2", "2"),
@@ -96,8 +101,10 @@ BA_data <- BA_data |>
          )
 ```
 
-```{r}
-aaa <- BA_data |>
+```{r BA data standardize site names, include=FALSE}
+# cleaning up the site numbers and names: complete missing names based on numbers
+
+BA_data <- BA_data |>
   mutate(
     site_name =  if_else(site_number == "1", "Swanson Island Fish Farm", site_name),
     site_name =  if_else(site_number == "2", "Midsummer Island Fish Farm (Potts Bay)", site_name),
@@ -150,7 +157,9 @@ aaa <- BA_data |>
 ```
 
 ```{r, BA data complete missing site numbers based on site names, include=FALSE}
-test <- BA_data |>
+# cleaning up the site numbers and names: complete missing numbers based on names
+
+BA_data <- BA_data |>
   mutate(
     site_number =  if_else(site_name == "Alder Bay", "I", site_number),
     site_number =  if_else(site_name == "Arthur Point", "21", site_number),
@@ -201,5 +210,58 @@ test <- BA_data |>
   )
 ```
 
+# Incorporation of latitudes and longtitudes
+
+```{r}
+
+BA_sites <- read_csv(here("data/interim/broughton_archipelago/BAA_sites.csv")) |>
+  clean_names() %>%
+  select(site_number, lat_decimal_degrees, long_decimal_degrees)
+
+BA_data <- left_join(BA_data, BA_sites, by = "site_number") 
+
+BA_data <- BA_data %>%
+  mutate(
+    site_latitude = lat_decimal_degrees,
+    site_longitude = long_decimal_degrees
+  ) %>%
+  select(
+    -lat_decimal_degrees,
+    -long_decimal_degrees
+  )
+```
+
+```{r}
+write_csv(BA_data, here("data/interim/broughton_archipelago/BA_data_2016_to_2020.csv"))
+```
+
+
+Useful links: 
 https://stackoverflow.com/questions/17013227/select-only-rows-if-its-value-in-a-particular-column-is-na-in-r
+
+```{r}
+#library(mapview)
+
+#mapview(
+ # BA_data,
+  #xcol = "site_latitude",
+  #ycol = "site_longitude",
+  #crs = 4269,
+  #grid = FALSE
+#)
+```
+
+```{r}
+BA_data %>%
+  group_by(year) %>%
+  ggplot(
+    aes(
+      x = year, 
+      y = lep_total
+    )) + 
+  geom_col() +
+  xlim(2015,2021) +
+  theme_minimal() 
+```
+
 
