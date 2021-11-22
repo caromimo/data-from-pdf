@@ -18,7 +18,7 @@ all_species <- data %>%
 ui <- fluidPage(
   selectInput(
     inputId = "fish_species",
-    label = "Fish species:",
+    label = "Select the fish species:",
     choices = all_species
   ),
   submitButton(
@@ -39,14 +39,18 @@ server <- function(input, output) {
           x = year, 
           y = lep_total
         )) + 
-      geom_col() +
+      geom_col(width = 0.5) +
       xlim(2015, 2021) +
-      ylim(0, 60) +
+      ylim(0, 120) +
+       labs(
+        x = "Sampling year in the Broughton Archipelago in BC",
+        y = expression("Total number of L. salmonis on fish")
+      ) +
       theme_minimal() +
-      labs(
-        x = "Sampling year",
-        y = expression("Total number of Lepeophtheirus salmonis")
-      )
+      theme(
+        axis.title = element_text(size=14), 
+        axis.text = element_text(size=12)
+        )
   )
 }
 
