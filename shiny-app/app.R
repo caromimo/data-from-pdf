@@ -8,11 +8,6 @@ data <-
   read_csv(here("data/interim/broughton_archipelago/BA_data_2016_to_2020.csv")) %>%
   clean_names()
 
-all_sites <- data %>%
-  select(site_name) %>%
-  distinct() %>%
-  drop_na()
-
 all_species <- data %>%
   select(fish_species) %>%
   distinct() %>%
@@ -21,11 +16,6 @@ all_species <- data %>%
 # ui portion
 
 ui <- fluidPage(
-  selectInput(
-    inputId = "site_name",
-    label = "Sampling site name:",
-    choices = all_sites
-  ),
   selectInput(
     inputId = "fish_species",
     label = "Fish species:",
@@ -43,8 +33,7 @@ server <- function(input, output) {
   output$sea_lice_plot <- renderPlot(
     data %>%
       group_by(year) %>%
-      filter(site_name == input$site_name,
-             fish_species == input$fish_species) %>%
+      filter(fish_species == input$fish_species) %>%
       ggplot(
         aes(
           x = year, 
