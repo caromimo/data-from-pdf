@@ -1,8 +1,12 @@
 remove(list=ls())
 
 library(shiny)
-library(tidyverse)
+library(ggplot2)
+library(magrittr)
+library(dplyr)
 library(janitor)
+library(readr)
+library(here)
 
 data <- 
   read_csv(here("data/interim/broughton_archipelago/BA_data_2016_to_2020.csv")) %>%
@@ -10,8 +14,7 @@ data <-
 
 all_species <- data %>%
   select(fish_species) %>%
-  distinct() %>%
-  drop_na()
+  distinct()
 
 # ui portion
 
