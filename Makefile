@@ -37,6 +37,15 @@ extract-quatsino-data:
 		camelot -p 35-44 -f csv --output ./data/interim/quatsino/quatsino_2020.csv lattice ./data/raw/quatsino/Quatsino-Wild-Juvenile-Salmonid-Monitoring-2020.pdf
 		camelot -p 35-46 -f csv --output ./data/interim/quatsino/quatsino_2021.csv lattice ./data/raw/quatsino/Quatsino-Wild-Juvenile-Salmonid-Monitoring-2021.pdf
 
+.PHONY: extract-clayoquot-data
+extract-clayoquot-data:
+		camelot -p 32-49 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2016.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2016.pdf
+		camelot -p 45-69 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2017.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2017.pdf
+		camelot -p 44-61 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2018.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2018.pdf
+		camelot -p 40-50 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2019.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2019.pdf
+		camelot -p 39-53 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2020.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2020.pdf
+		camelot -p 37-58 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2021.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2021.pdf
+
 # Append the csv files with csvkit
 
 # if needed, install csvkit: 
@@ -76,6 +85,15 @@ collate-quatsino-data:
 		csvstack data/interim/quatsino/quatsino_2019* > data/interim/quatsino/all_quatsino_2019.csv
 		csvstack data/interim/quatsino/quatsino_2020* > data/interim/quatsino/all_quatsino_2020.csv
 		csvstack data/interim/quatsino/quatsino_2021* > data/interim/quatsino/all_quatsino_2021.csv
+		
+.PHONY: collate-clayoquot-data
+collate-clayoquot-data:
+		csvstack data/interim/clayoquot/extracted/clayoquot_2016* > data/interim/clayoquot/assembled/clayoquot_2016.csv
+		csvstack data/interim/clayoquot/extracted/clayoquot_2017* > data/interim/clayoquot/assembled/clayoquot_2017.csv
+		csvstack data/interim/clayoquot/extracted/clayoquot_2018* > data/interim/clayoquot/assembled/clayoquot_2018.csv
+		csvstack data/interim/clayoquot/extracted/clayoquot_2019* > data/interim/clayoquot/assembled/clayoquot_2019.csv
+		csvstack data/interim/clayoquot/extracted/clayoquot_2020* > data/interim/clayoquot/assembled/clayoquot_2020.csv
+		csvstack data/interim/clayoquot/extracted/clayoquot_2021* > data/interim/clayoquot/assembled/clayoquot_2021.csv
 
 # Extract and collate all in one step:
 
@@ -83,10 +101,10 @@ collate-quatsino-data:
 all: extract collate
 
 .PHONY: extract
-extract: extract-broughton-archipelago-data extract-discovery-islands-data extract-quatsino-data
+extract: extract-broughton-archipelago-data extract-discovery-islands-data extract-quatsino-data extract-clayoquot-data
 
 .PHONY: collate
-collate: collate-broughton-archipelago-data collate-discovery-islands-data collate-quatsino-data
+collate: collate-broughton-archipelago-data collate-discovery-islands-data collate-quatsino-data collate-clayoquot-data
 
 # Clean directories when needed
 
@@ -95,6 +113,7 @@ clean:
 		rm -f data/interim/broughton_archipelago/*
 		rm -f data/interim/discovery_islands/*
 		rm -f data/interim/quatsino/*
+		rm -f data/interim/clayoquot/extracted/*
 
 
 .ONESHELL:
