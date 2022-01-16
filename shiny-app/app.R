@@ -6,10 +6,9 @@ library(magrittr)
 library(dplyr)
 library(janitor)
 library(readr)
-library(here)
 
 data <- 
-  read_csv(here("data/interim/broughton_archipelago/BA_data_2016_to_2020.csv")) %>%
+  read_csv("/app/data/BA_data_2016_to_2020.csv") %>%
   clean_names()
 
 all_species <- data %>%

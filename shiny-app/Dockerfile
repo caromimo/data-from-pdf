@@ -14,6 +14,7 @@ RUN set -ex; apk add --no-cache autoconf=2.69-r2 automake=1.16.1-r0
 # Download R and system dependencies
 RUN apk add -U --no-cache R R-dev \
     bash \
+    tzdata \
     m4 \
     file \
     fontconfig \
@@ -42,6 +43,7 @@ RUN update-ms-fonts
 COPY app.R .
 ## renv.lock file
 COPY renv.lock ./renv.lock
+COPY data ./data/
 
 # install renv & restore packages
 RUN Rscript -e 'install.packages("renv", , repo="https://cran.rstudio.com/")'
