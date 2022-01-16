@@ -9,3 +9,5 @@ tables/*
 *.swp
 scripts/*.pdf
 **/*.pdf
+.Rprofile
+shiny-app/.Rprofile
