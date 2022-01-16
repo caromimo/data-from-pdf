@@ -4,6 +4,7 @@
 
 .PHONY: extract-broughton-archipelago-data
 extract-broughton-archipelago-data:
+		camelot -p 34-35 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2015.csv lattice ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2015.pdf
 		camelot -p 45-71 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2016.csv lattice ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2016.pdf
 		camelot -p 47-73 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2017.csv lattice ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2017.pdf
 		camelot -p 47-62 -f csv --output ./data/interim/broughton_archipelago/broughton_archipelago_2018.csv lattice ./data/raw/broughton_archipelago/broughton-wild-juvenile-salmonid-monitoring-2018.pdf
@@ -30,6 +31,7 @@ extract-discovery-islands-data:
 
 .PHONY: extract-quatsino-data
 extract-quatsino-data:
+		camelot -p 32-33 -f csv --output ./data/interim/quatsino/quatsino_2015.csv lattice ./data/raw/quatsino/quatsino-wild-juvenile-salmonid-monitoring-2015.pdf
 		camelot -p 35-41 -f csv --output ./data/interim/quatsino/quatsino_2016.csv lattice ./data/raw/quatsino/quatsino-wild-juvenile-salmonid-monitoring-2016.pdf
 		camelot -p 36-46 -f csv --output ./data/interim/quatsino/quatsino_2017.csv lattice ./data/raw/quatsino/quatsino-wild-juvenile-salmonid-monitoring-2017.pdf
 		camelot -p 39-48 -f csv --output ./data/interim/quatsino/quatsino_2018.csv lattice ./data/raw/quatsino/quatsino-wild-juvenile-salmonid-monitoring-2018.pdf
@@ -39,6 +41,7 @@ extract-quatsino-data:
 
 .PHONY: extract-clayoquot-data
 extract-clayoquot-data:
+		camelot -p 11-33 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2011.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2011.pdf
 		camelot -p 32-49 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2016.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2016.pdf
 		camelot -p 45-69 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2017.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2017.pdf
 		camelot -p 44-61 -f csv --output ./data/interim/clayoquot/extracted/clayoquot_2018.csv stream ./data/interim/clayoquot/Clayoquot-Wild-Juvenile-Salmonid-Monitoring-2018.pdf
@@ -53,6 +56,7 @@ extract-clayoquot-data:
 
 .PHONY: collate-broughton-archipelago-data
 collate-broughton-archipelago-data:
+		csvstack data/interim/broughton_archipelago/broughton_archipelago_2015* > data/interim/broughton_archipelago/all_broughton_archipelago_2015.csv
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2016* > data/interim/broughton_archipelago/all_broughton_archipelago_2016.csv
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2017* > data/interim/broughton_archipelago/all_broughton_archipelago_2017.csv
 		csvstack data/interim/broughton_archipelago/broughton_archipelago_2018* > data/interim/broughton_archipelago/all_broughton_archipelago_2018.csv
@@ -79,6 +83,7 @@ collate-discovery-islands-data:
 
 .PHONY: collate-quatsino-data
 collate-quatsino-data:
+		csvstack data/interim/quatsino/quatsino_2015* > data/interim/quatsino/all_quatsino_2015.csv
 		csvstack data/interim/quatsino/quatsino_2016* > data/interim/quatsino/all_quatsino_2016.csv
 		csvstack data/interim/quatsino/quatsino_2017* > data/interim/quatsino/all_quatsino_2017.csv
 		csvstack data/interim/quatsino/quatsino_2018* > data/interim/quatsino/all_quatsino_2018.csv
@@ -88,6 +93,7 @@ collate-quatsino-data:
 		
 .PHONY: collate-clayoquot-data
 collate-clayoquot-data:
+		csvstack data/interim/clayoquot/extracted/clayoquot_2011* > data/interim/clayoquot/assembled/clayoquot_2011.csv
 		csvstack data/interim/clayoquot/extracted/clayoquot_2016* > data/interim/clayoquot/assembled/clayoquot_2016.csv
 		csvstack data/interim/clayoquot/extracted/clayoquot_2017* > data/interim/clayoquot/assembled/clayoquot_2017.csv
 		csvstack data/interim/clayoquot/extracted/clayoquot_2018* > data/interim/clayoquot/assembled/clayoquot_2018.csv
